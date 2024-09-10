@@ -4,7 +4,7 @@ class User {
   String email;
   String city;
   String password;
-  List<dynamic> roles;
+  List<dynamic>? roles;
 
   User({
     required this.id,
@@ -12,7 +12,6 @@ class User {
     required this.email,
     required this.city,
     required this.password,
-    required this.roles,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -22,7 +21,6 @@ class User {
       email: json['email'],
       city: json['city'],
       password: json['password'],
-      roles: json['roles'],
     );
   }
 
@@ -33,7 +31,6 @@ class User {
       'email': email,
       'city': city,
       'password': password,
-      'roles': roles,
     };
   }
 }

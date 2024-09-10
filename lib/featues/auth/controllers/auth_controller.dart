@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:myapp/data/models/user.dart' as myUser;
 
 class AuthController extends GetxController {
   final firabaseAuth = FirebaseAuth.instance;
@@ -26,10 +27,21 @@ class AuthController extends GetxController {
 
   Future<void> register() async {
     try {
-      firabaseAuth.createUserWithEmailAndPassword(
+      UserCredential user = await firabaseAuth.createUserWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
+      if (user.user != null) {
+        await fireabseFireStore.collection('users').add(myUser.User(
+              id: user.user!.uid,
+              name: usernameController.text,
+              email: emailController.text,
+              city: cityController.text,
+              password: passwordController.text,
+            ).toJson());
+      }
+
+      // a.collection('roles').add({'name': 'user'});
       Get.snackbar('Success', 'success create your account',
-          backgroundColor: Colors.green);
+          colorText: Colors.white, backgroundColor: Colors.green);
       //navigation to home
     } catch (e) {
       Get.snackbar('Error', 'Failed to create user',

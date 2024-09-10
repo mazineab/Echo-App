@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       getPages: Routes.getApp(),
-      initialRoute: Routesnames.login,
+      initialRoute: Routesnames.register,
     );
   }
 }
