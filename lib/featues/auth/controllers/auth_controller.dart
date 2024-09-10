@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:myapp/data/models/user.dart' as myUser;
+import 'package:myapp/routes/routes_names.dart';
 
 class AuthController extends GetxController {
   final firabaseAuth = FirebaseAuth.instance;
@@ -16,8 +17,11 @@ class AuthController extends GetxController {
 
   Future<void> login() async {
     try {
-      firabaseAuth.signInWithEmailAndPassword(
+      UserCredential user = await firabaseAuth.signInWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
+      if (user.user != null) {
+        Get.offNamed(Routesnames.home);
+      }
       //navigation to home
     } catch (e) {
       Get.snackbar('Error', 'Something went wrong',
@@ -26,6 +30,12 @@ class AuthController extends GetxController {
   }
 
   Future<void> register() async {
+    final listControllers = [
+      emailController,
+      usernameController,
+      cityController,
+      passwordController
+    ];
     try {
       UserCredential user = await firabaseAuth.createUserWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
@@ -37,6 +47,7 @@ class AuthController extends GetxController {
               city: cityController.text,
               password: passwordController.text,
             ).toJson());
+        listControllers.forEach((e) => e.text = "");
       }
 
       // a.collection('roles').add({'name': 'user'});
@@ -45,7 +56,7 @@ class AuthController extends GetxController {
       //navigation to home
     } catch (e) {
       Get.snackbar('Error', 'Failed to create user',
-          backgroundColor: Colors.red);
+          colorText: Colors.white, backgroundColor: Colors.red);
     }
   }
 }

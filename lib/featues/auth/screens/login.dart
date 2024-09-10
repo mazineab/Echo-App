@@ -49,7 +49,7 @@ class Login extends StatelessWidget {
               const SizedBox(height: 32.0),
               ElevatedButton(
                 onPressed: () {
-                  
+                  controller.login();
                 },
                 child: const Text('Login'),
               ),
