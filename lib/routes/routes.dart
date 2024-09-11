@@ -6,8 +6,8 @@ import 'package:myapp/routes/routes_names.dart';
 
 class Routes{
     static getApp()=>[
-        GetPage(name: Routesnames.login, page:()=>Login()),
-        GetPage(name: Routesnames.register, page:()=>Register()),
-        GetPage(name: Routesnames.home, page:()=>HomePage())
+        GetPage(name: RoutesNames.login, page:()=>Login()),
+        GetPage(name: RoutesNames.register, page:()=>Register()),
+        GetPage(name: RoutesNames.home, page:()=>HomePage())
     ];
 }

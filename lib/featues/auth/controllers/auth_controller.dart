@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:myapp/data/models/enums.dart';
 import 'package:myapp/data/models/user.dart' as myUser;
 import 'package:myapp/routes/routes_names.dart';
 
@@ -12,15 +13,22 @@ class AuthController extends GetxController {
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final cityController = TextEditingController();
+  final phoneController = TextEditingController();
   final usernameController = TextEditingController();
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  String? sexeVal;
+  changeSexeVal(String val) {
+    sexeVal = val;
+    update();
+  }
 
   Future<void> login() async {
     try {
       UserCredential user = await firabaseAuth.signInWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
       if (user.user != null) {
-        Get.offNamed(Routesnames.home);
+        Get.offNamed(RoutesNames.home);
       }
       //navigation to home
     } catch (e) {
@@ -32,8 +40,9 @@ class AuthController extends GetxController {
   Future<void> register() async {
     final listControllers = [
       emailController,
-      usernameController,
-      cityController,
+      firstNameController,
+      lastNameController,
+      phoneController,
       passwordController
     ];
     try {
@@ -42,14 +51,16 @@ class AuthController extends GetxController {
       if (user.user != null) {
         await fireabseFireStore.collection('users').add(myUser.User(
               id: user.user!.uid,
-              name: usernameController.text,
+              firstName: firstNameController.text,
+              lastName: lastNameController.text,
               email: emailController.text,
-              city: cityController.text,
+              phoneNumber: phoneController.text,
+              sexe: sexeVal == "Male" ? Sexe.male : Sexe.male,
               password: passwordController.text,
             ).toJson());
         listControllers.forEach((e) => e.text = "");
+        sexeVal = null;
       }
-
       // a.collection('roles').add({'name': 'user'});
       Get.snackbar('Success', 'success create your account',
           colorText: Colors.white, backgroundColor: Colors.green);
