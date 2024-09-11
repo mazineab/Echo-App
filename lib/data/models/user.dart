@@ -1,25 +1,33 @@
+import 'package:myapp/data/models/enums.dart';
+
 class User {
   String id;
-  String name;
+  String firstName;
+  String lastName;
   String email;
-  String city;
+  String phoneNumber;
   String password;
+  Sexe sexe;
   List<dynamic>? roles;
 
   User({
     required this.id,
-    required this.name,
+    required this.firstName,
+    required this.lastName,
     required this.email,
-    required this.city,
+    required this.sexe,
+    required this.phoneNumber,
     required this.password,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'],
-      name: json['name'],
+      firstName: json['firstName'],
+      lastName: json['lastName'],
       email: json['email'],
-      city: json['city'],
+      phoneNumber: json['phoneNumber'],
+      sexe: json['sexe'],
       password: json['password'],
     );
   }
@@ -27,9 +35,11 @@ class User {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name': name,
+      'firstName': firstName,
+      'lastName': lastName,
       'email': email,
-      'city': city,
+      'phoneNumber': phoneNumber,
+      'sexe':sexe==Sexe.male?"male":"femel",
       'password': password,
     };
   }

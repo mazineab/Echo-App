@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/common/widgets/custom_button.dart';
+import 'package:myapp/common/widgets/custom_text_fields.dart';
+import 'package:myapp/common/widgets/custom_text_navigation.dart';
 import 'package:myapp/featues/auth/controllers/auth_controller.dart';
+import 'package:myapp/routes/routes_names.dart';
 
 class Login extends StatelessWidget {
   Login({super.key});
@@ -10,50 +14,41 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: controller.formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextFormField(
-                controller: controller.emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: controller.passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 32.0),
-              ElevatedButton(
-                onPressed: () {
-                  controller.login();
-                },
-                child: const Text('Login'),
-              ),
-            ],
+        child: SingleChildScrollView(
+          child: Form(
+            key: controller.formKey,
+            child: Column(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height / 7),
+                const Text("Sign in to start sharing your updates!",
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                SizedBox(height: MediaQuery.of(context).size.height / 6),
+                CustomTextFeild(
+                    label: "Email",
+                    controller: controller.emailController,
+                    isPassword: false),
+                const SizedBox(height: 16.0),
+                CustomTextFeild(
+                    label: "Password",
+                    controller: controller.passwordController,
+                    isPassword: true),
+                const SizedBox(height: 32.0),
+                CustomButton(
+                    child: const Text('Login'),
+                    onTap: () {
+                      controller.login();
+                    }),
+                SizedBox(height: MediaQuery.of(context).size.height / 10),
+                CustomTextNavigation(
+                    firstText: "You dont have account?",
+                    secondText: "create one!",
+                    onTap: () => Get.offNamed(RoutesNames.register))
+              ],
+            ),
           ),
         ),
       ),

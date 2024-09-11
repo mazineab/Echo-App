@@ -32,8 +32,8 @@ class MyApp extends StatelessWidget {
       ),
       getPages: Routes.getApp(),
       initialRoute: FirebaseAuth.instance.currentUser == null
-          ? Routesnames.login
-          : Routesnames.home,
+          ? RoutesNames.login
+          : RoutesNames.home,
       // initialRoute: Routesnames.register,
     );
   }
