@@ -58,7 +58,9 @@ class AuthController extends GetxController {
               sexe: sexeVal == "Male" ? Sexe.male : Sexe.male,
               password: passwordController.text,
             ).toJson());
-        listControllers.forEach((e) => e.text = "");
+        for (var e in listControllers) {
+          e.text = "";
+        }
         sexeVal = null;
       }
       // a.collection('roles').add({'name': 'user'});

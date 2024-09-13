@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myapp/featues/auth/controllers/home_controller.dart';
+import 'package:myapp/featues/home/controller/home_controller.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
@@ -12,9 +12,24 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("HomeApp"),
-        centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () {
+                controller.logout();
+              },
+              icon: const Icon(Icons.logout))
+        ],
+        // centerTitle: true,
       ),
-      body: Container(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          controller.showAlertAddStatus();
+        },
+        child: const Icon(Icons.add),
+      ),
+      body: Container(
+        child: Text("HII"),
+      ),
     );
     // return Scaffold(
     //   appBar: AppBar(title: const Text("Home")),
