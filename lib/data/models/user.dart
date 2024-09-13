@@ -27,7 +27,7 @@ class User {
       lastName: json['lastName'],
       email: json['email'],
       phoneNumber: json['phoneNumber'],
-      sexe: json['sexe'],
+      sexe: json['sexe']=="male"?Sexe.male:Sexe.female,
       password: json['password'],
     );
   }
