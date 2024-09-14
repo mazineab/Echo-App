@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/featues/home/controller/home_controller.dart';
+import 'package:myapp/routes/routes_names.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
@@ -22,28 +23,18 @@ class HomePage extends StatelessWidget {
         // centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.lightBlue,
         onPressed: () {
-          controller.showAlertAddStatus();
+          Get.toNamed(RoutesNames.addStatus);
         },
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
       body: Container(
-        child: Text("HII"),
+        child: const Text("HII"),
       ),
     );
-    // return Scaffold(
-    //   appBar: AppBar(title: const Text("Home")),
-    //   body: Obx(()=>ListView.builder(
-    //         itemCount: controller.listUsers.length,
-    //         itemBuilder: (context, index) {
-    //           return ListTile(
-    //             leading: const Icon(Icons.person),
-    //             title: Text(controller.listUsers[index].name),
-    //             subtitle: Text(controller.listUsers[index].email),
-    //             onTap: () {},
-    //           );
-    //         }),
-    //   ),
-    // );
   }
 }
