@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:myapp/common/widgets/custom_button.dart';
 import 'package:myapp/common/widgets/custom_text_fields.dart';
@@ -37,11 +38,15 @@ class Login extends StatelessWidget {
                     controller: controller.passwordController,
                     isPassword: true),
                 const SizedBox(height: 32.0),
-                CustomButton(
-                    child: const Text('Login'),
-                    onTap: () {
-                      controller.login();
-                    }),
+                Obx(()=>
+                   CustomButton(
+                      child:controller.isload.value
+                      ? const SpinKitCircle(color: Colors.white,size: 30.0,)
+                       : const Text('Login'),
+                      onTap: () {
+                        controller.login();
+                      }),
+                ),
                 SizedBox(height: MediaQuery.of(context).size.height / 10),
                 CustomTextNavigation(
                     firstText: "You dont have account?",

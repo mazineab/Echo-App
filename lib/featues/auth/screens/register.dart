@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:myapp/common/widgets/custom_button.dart';
 import 'package:myapp/common/widgets/custom_text_fields.dart';
@@ -85,8 +86,12 @@ class Register extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 32.0),
-              CustomButton(
-                  onTap: controller.register, child: const Text("Register")),
+              Obx(()=>
+                 CustomButton(
+                    onTap: controller.register,
+                     child:controller.isload.value? const SpinKitCircle(color: Colors.white,size: 30.0,):const Text("Register")
+                     ),
+              ),
               SizedBox(height: MediaQuery.of(context).size.height / 50),
               CustomTextNavigation(
                   firstText: "You have account?",
