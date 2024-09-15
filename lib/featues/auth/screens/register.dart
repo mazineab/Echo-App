@@ -86,11 +86,14 @@ class Register extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 32.0),
-              Obx(()=>
-                 CustomButton(
+              Obx(
+                () => CustomButton(
                     onTap: controller.register,
-                     child:controller.isload.value? const SpinKitCircle(color: Colors.white,size: 30.0,):const Text("Register")
-                     ),
+                    child: controller.isload.value
+                        ? const CircularProgressIndicator(
+                            color: Colors.white,
+                          )
+                        : const Text("Register")),
               ),
               SizedBox(height: MediaQuery.of(context).size.height / 50),
               CustomTextNavigation(

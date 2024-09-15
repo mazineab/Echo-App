@@ -41,7 +41,7 @@ class Login extends StatelessWidget {
                 Obx(()=>
                    CustomButton(
                       child:controller.isload.value
-                      ? const SpinKitCircle(color: Colors.white,size: 30.0,)
+                      ? const CircularProgressIndicator(color: Colors.white,)
                        : const Text('Login'),
                       onTap: () {
                         controller.login();

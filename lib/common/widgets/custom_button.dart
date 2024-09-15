@@ -15,7 +15,7 @@ class CustomButton extends StatelessWidget {
       height: 50,
       child: ElevatedButton(
           style: ButtonStyle(
-              backgroundColor: const WidgetStatePropertyAll(Color(0xFF486eff)),
+              backgroundColor: const WidgetStatePropertyAll(Colors.lightBlue),
               foregroundColor: const WidgetStatePropertyAll(Colors.white),
               shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)))),

@@ -36,7 +36,7 @@ class AuthController extends GetxController {
 
   Future<void> login() async {
     isload.value = true;
-    Future.delayed(Duration(seconds: 1));
+    Future.delayed(const Duration(seconds: 1));
     try {
       UserCredential user = await firabaseAuth.signInWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
