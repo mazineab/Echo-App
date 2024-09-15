@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:myapp/featues/home/controller/add_status_controller.dart';
 
@@ -16,7 +14,7 @@ class AddStatusScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Create status"),
       ),
-      body: SizedBox(
+      body: SingleChildScrollView(
           child: Column(
         children: [
           SizedBox(
@@ -34,10 +32,11 @@ class AddStatusScreen extends StatelessWidget {
             ),
             title: Text(controller.fullname.value),
           ),
-          const SizedBox(height: 30),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.12),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),
             child: TextFormField(
+              controller: controller.statusController,
                 minLines: 6,
                 maxLines: null,
                 decoration: InputDecoration(
@@ -51,15 +50,62 @@ class AddStatusScreen extends StatelessWidget {
               controller.showDialogOfTags();
             },
             child: const Padding(
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [Icon(Icons.add), Text("Montion tags")],
+                children: [
+                  Icon(
+                    size: 25,
+                    Icons.add,
+                    color: Colors.lightBlue,
+                  ),
+                  Text(
+                    "Montion tags",
+                    style: TextStyle(fontSize: 18),
+                  )
+                ],
               ),
             ),
           ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-          FilledButton(onPressed: () {}, child: Text("Add"))
+          Obx(
+            () => controller.listSelectedTags.isNotEmpty
+                ? Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 23),
+                    height: 40,
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: controller.listSelectedTags.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 2),
+                            child: controller.tagWidget(
+                                tag: controller.listSelectedTags[index]),
+                          );
+                        }),
+                  )
+                : const SizedBox(
+                    height: 0,
+                  ),
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.10),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 50),
+            width: double.infinity,
+            height: 50,
+            child: Obx(()=>
+            FilledButton(
+                  onPressed: ()async {
+                    await controller.submitStatus();
+                  },
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Colors.lightBlue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child:controller.isload.value?const CircularProgressIndicator(color: Colors.white,):const Text("Write status")),
+            ),
+          )
         ],
       )),
     );
