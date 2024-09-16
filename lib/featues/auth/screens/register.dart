@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:myapp/common/widgets/custom_button.dart';
 import 'package:myapp/common/widgets/custom_text_fields.dart';
