@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/data/models/status.dart';
 import 'package:myapp/data/models/user.dart' as MyUser;
 import 'package:myapp/routes/routes_names.dart';
 
@@ -15,15 +16,50 @@ class HomeController extends GetxController {
   final prefs = Get.find<SharedPredManager>();
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  List<Status> listStatus = <Status>[].obs;
+  var isLoading = true.obs;
 
-  // Future<void> getUsers() async {
-  //   CollectionReference users = firebaseFirestore.collection("users");
-  //   QuerySnapshot querySnapshot = await users.get();
-  //   querySnapshot.docs.forEach((e) {
-  //     listUsers.add(MyUser.User.fromJson(e.data() as Map<String, dynamic>));
-  //   });
-  //   listUsers;
-  // }
+  Future<void> getStatus() async {
+    try {
+      CollectionReference status = fireabseFireStore.collection('status');
+      QuerySnapshot querySnapshot = await status.get();
+      querySnapshot.docs.forEach((e) {
+        listStatus.add(Status.fromJson(e.data() as Map<String, dynamic>));
+      });
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<String> getUserNameById(String? id) async {
+    Map<String, dynamic> data = await fireabseFireStore
+        .collection('users')
+        .where('id', isEqualTo: id)
+        .get() as Map<String, dynamic>;
+    String name = MyUser.User.fromJson(data).firstName;
+    String lastName = MyUser.User.fromJson(data).lastName;
+    return "$name $lastName";
+  }
+
+  Future<void> getUsers() async {
+    try {
+      var getIds = listStatus.map((e) => e.userId).toList();
+      if (getIds.isNotEmpty) {
+        CollectionReference users = firebaseFirestore.collection("users");
+        QuerySnapshot querySnapshot =
+            await users.where('id', whereIn: getIds).get();
+        querySnapshot.docs.forEach((e) {
+          listUsers.add(MyUser.User.fromJson(e.data() as Map<String, dynamic>));
+        });
+      }
+      listUsers;
+      update();
+    } catch (e) {
+      throw Exception(e);
+    }finally{
+      isLoading.value=false;
+    }
+  }
 
   Future<void> logout() async {
     try {
@@ -97,7 +133,7 @@ class HomeController extends GetxController {
 
   checkAndSave() async {
     String? userData = prefs.getString("userData");
-    if (userData != null && userData.isEmpty) {
+    if (userData == null || userData.isEmpty) {
       await getDataOfCurrentUser();
     }
   }
@@ -106,5 +142,7 @@ class HomeController extends GetxController {
   Future<void> onInit() async {
     super.onInit();
     await checkAndSave();
+    await getStatus();
+    await getUsers();
   }
 }
