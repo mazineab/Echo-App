@@ -5,6 +5,7 @@ enum Sexe { male, female }
 
 
 enum Tags {
+  Other,
   Development,
   Economy,
   Technology,
