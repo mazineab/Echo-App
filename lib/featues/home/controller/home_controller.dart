@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/data/models/like.dart';
 import 'package:myapp/data/models/status.dart';
 import 'package:myapp/data/models/user.dart' as MyUser;
 import 'package:myapp/routes/routes_names.dart';
@@ -18,6 +19,8 @@ class HomeController extends GetxController {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   List<Status> listStatus = <Status>[].obs;
   var isLoading = true.obs;
+  var fullName = "".obs;
+  var myId = ''.obs;
 
   Future<void> getStatus() async {
     try {
@@ -56,8 +59,8 @@ class HomeController extends GetxController {
       update();
     } catch (e) {
       throw Exception(e);
-    }finally{
-      isLoading.value=false;
+    } finally {
+      isLoading.value = false;
     }
   }
 
@@ -65,6 +68,7 @@ class HomeController extends GetxController {
     try {
       await firebaseAuth.signOut();
       prefs.clearAll();
+      print(myId.value);
       Get.offAllNamed(RoutesNames.login);
     } catch (e) {
       throw Exception(e);
@@ -138,10 +142,45 @@ class HomeController extends GetxController {
     }
   }
 
+  getUserData() {
+    String? userData = prefs.getString("userData");
+    if (userData != null && userData.isNotEmpty) {
+      MyUser.User currentUser = MyUser.User.fromJson(jsonDecode(userData));
+      fullName.value = "${currentUser.firstName} ${currentUser.lastName}";
+      myId.value = currentUser.id;
+    }
+  }
+
+  likeUpdates(Like like) async {
+    try {
+      DocumentReference docRef =
+          firebaseFirestore.collection('status').doc(like.status);
+      DocumentSnapshot docSnp = await docRef.get();
+
+      if (docSnp.exists) {
+        List<dynamic> listLikes = docSnp['listLikes'] ?? [];
+        var userLike = listLikes.firstWhere(
+          (lk) => myId.value == lk['userId'],
+          orElse: () => null,
+        );
+
+        if (userLike == null) {
+          listLikes.add(like.toJson());
+        } else {
+          listLikes.removeWhere((like) => like['userId'] == myId.value);
+        }
+        await docRef.update({'listLikes': listLikes});
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   @override
   Future<void> onInit() async {
     super.onInit();
     await checkAndSave();
+    await getUserData();
     await getStatus();
     await getUsers();
   }
