@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/data/models/comment.dart';
 import 'package:myapp/data/models/like.dart';
 import 'package:myapp/data/models/status.dart';
 import 'package:myapp/data/models/user.dart' as MyUser;
@@ -55,6 +56,22 @@ class HomeController extends GetxController {
           listUsers.add(MyUser.User.fromJson(e.data() as Map<String, dynamic>));
         });
       }
+      listUsers;
+      update();
+    } catch (e) {
+      throw Exception(e);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> getAllUsers() async {
+    try {
+      CollectionReference users = firebaseFirestore.collection("users");
+      QuerySnapshot querySnapshot = await users.get();
+      querySnapshot.docs.forEach((e) {
+        listUsers.add(MyUser.User.fromJson(e.data() as Map<String, dynamic>));
+      });
       listUsers;
       update();
     } catch (e) {
@@ -176,12 +193,60 @@ class HomeController extends GetxController {
     }
   }
 
+  var textCommentController = TextEditingController();
+  commentUpdate(String statusId) async {
+    try {
+      Comment comment = Comment(
+          id: '',
+          userId: myId.value,
+          content: textCommentController.text,
+          statusId: statusId);
+      DocumentReference docRef =
+          fireabseFireStore.collection('status').doc(statusId);
+      docRef
+          .collection('comments')
+          .add(comment.toJson())
+          .then((DocumentReference doc) {
+        fireabseFireStore.collection('status').doc(statusId);
+        docRef.collection('comments').doc(doc.id).update({'id': doc.id});
+      });
+      await getCommants(statusId);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  getCommants(String statusId) async {
+    try {
+      QuerySnapshot querySnp = await fireabseFireStore
+          .collection('status')
+          .doc(statusId)
+          .collection('comments')
+          .get();
+      List<dynamic> comments = querySnp.docs
+          .map((doc) => Comment.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+      comments.removeWhere((e) => e.userId == '');
+      for (var st in listStatus) {
+        if (st.id == statusId) {
+          st.listComments = comments as List<Comment>?;
+          break;
+        } else {
+          continue;
+        }
+      }
+    } catch (e) {
+      Exception(e);
+    }
+  }
+
   @override
   Future<void> onInit() async {
     super.onInit();
     await checkAndSave();
     await getUserData();
     await getStatus();
-    await getUsers();
+    // await getUsers();
+    await getAllUsers();
   }
 }

@@ -21,35 +21,35 @@ class AddStatusController extends GetxController {
   var uid = "".obs;
   var listSelectedTags = <Tag>[].obs;
   final List<Tag> tags = [
-    Tag(Tags.Development,icon:Icons.code),
-    Tag(Tags.Economy,icon:Icons.monetization_on),
-    Tag(Tags.Technology,icon:Icons.computer),
-    Tag(Tags.Science,icon:Icons.science),
-    Tag(Tags.Health,icon:Icons.health_and_safety),
-    Tag(Tags.Education,icon:Icons.school),
-    Tag(Tags.Environment,icon:Icons.nature),
-    Tag(Tags.Politics,icon:Icons.gavel),
-    Tag(Tags.Culture,icon:Icons.public),
-    Tag(Tags.Society,icon:Icons.group),
-    Tag(Tags.Sports,icon:Icons.sports),
-    Tag(Tags.Entertainment,icon:Icons.theater_comedy),
-    Tag(Tags.Art,icon:Icons.palette),
-    Tag(Tags.Travel,icon:Icons.travel_explore),
-    Tag(Tags.Food,icon:Icons.food_bank),
-    Tag(Tags.Fashion,icon:Icons.style),
-    Tag(Tags.Fitness,icon:Icons.fitness_center),
-    Tag(Tags.Music,icon:Icons.music_note),
-    Tag(Tags.Movies,icon:Icons.movie),
-    Tag(Tags.Books,icon:Icons.book),
-    Tag(Tags.Gaming,icon:Icons.videogame_asset),
-    Tag(Tags.Business,icon:Icons.business),
-    Tag(Tags.Finance,icon:Icons.attach_money),
-    Tag(Tags.Innovation,icon:Icons.lightbulb),
-    Tag(Tags.News,icon:Icons.article),
-    Tag(Tags.History,icon:Icons.history),
-    Tag(Tags.Philosophy,icon:Icons.book_online),
-    Tag(Tags.Psychology,icon:Icons.psychology),
-    Tag(Tags.Nature,icon: Icons.nature_people),
+    Tag(Tags.Development, icon: Icons.code),
+    Tag(Tags.Economy, icon: Icons.monetization_on),
+    Tag(Tags.Technology, icon: Icons.computer),
+    Tag(Tags.Science, icon: Icons.science),
+    Tag(Tags.Health, icon: Icons.health_and_safety),
+    Tag(Tags.Education, icon: Icons.school),
+    Tag(Tags.Environment, icon: Icons.nature),
+    Tag(Tags.Politics, icon: Icons.gavel),
+    Tag(Tags.Culture, icon: Icons.public),
+    Tag(Tags.Society, icon: Icons.group),
+    Tag(Tags.Sports, icon: Icons.sports),
+    Tag(Tags.Entertainment, icon: Icons.theater_comedy),
+    Tag(Tags.Art, icon: Icons.palette),
+    Tag(Tags.Travel, icon: Icons.travel_explore),
+    Tag(Tags.Food, icon: Icons.food_bank),
+    Tag(Tags.Fashion, icon: Icons.style),
+    Tag(Tags.Fitness, icon: Icons.fitness_center),
+    Tag(Tags.Music, icon: Icons.music_note),
+    Tag(Tags.Movies, icon: Icons.movie),
+    Tag(Tags.Books, icon: Icons.book),
+    Tag(Tags.Gaming, icon: Icons.videogame_asset),
+    Tag(Tags.Business, icon: Icons.business),
+    Tag(Tags.Finance, icon: Icons.attach_money),
+    Tag(Tags.Innovation, icon: Icons.lightbulb),
+    Tag(Tags.News, icon: Icons.article),
+    Tag(Tags.History, icon: Icons.history),
+    Tag(Tags.Philosophy, icon: Icons.book_online),
+    Tag(Tags.Psychology, icon: Icons.psychology),
+    Tag(Tags.Nature, icon: Icons.nature_people),
   ];
 
   fetchLocalData() {
@@ -136,7 +136,7 @@ class AddStatusController extends GetxController {
         "userId": uid.value,
         "content": statusController.text,
         'listTags': listSelectedTags.map((e) => e.toJson()).toList(),
-        'listComments': <Comment>[],
+        // 'listComments': <Comment>[],
         'listLikes': <Like>[]
       };
       await fireabseFireStore
@@ -146,7 +146,12 @@ class AddStatusController extends GetxController {
         fireabseFireStore
             .collection('status')
             .doc(doc.id)
-            .update({'id': doc.id}).then((_) {
+            .update({'id': doc.id}).then((_) async {
+          await fireabseFireStore
+              .collection('status')
+              .doc(doc.id)
+              .collection('comments')
+              .add({});
           statusController.text = '';
           listSelectedTags.clear();
         });

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:myapp/common/widgets/bottom_sheet/custom_bottom_sheet.dart';
 import 'package:myapp/common/widgets/custom_list_tile.dart';
 import 'package:myapp/data/models/like.dart';
 import 'package:myapp/data/models/user.dart' as MyUser;
@@ -8,6 +9,7 @@ import 'package:myapp/featues/home/controller/home_controller.dart';
 
 import '../../data/models/status.dart';
 
+// ignore: must_be_immutable
 class CustomStatusWidget extends StatelessWidget {
   final MyUser.User user;
   final Status status;
@@ -98,7 +100,9 @@ class CustomStatusWidget extends StatelessWidget {
               Text(
                 status.listLikes == null || status.listLikes!.isEmpty
                     ? ""
-                    : lenghtOf.value.toString()=='0'?'':lenghtOf.value.toString(),
+                    : lenghtOf.value.toString() == '0'
+                        ? ''
+                        : lenghtOf.value.toString(),
               ),
             ],
           ),
@@ -110,7 +114,20 @@ class CustomStatusWidget extends StatelessWidget {
     String text,
   ) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () async {
+        await controller.getCommants(status.id!);
+        showModalBottomSheet(
+            isScrollControlled: true,
+            context: Get.context!,
+            builder: (context) {
+              return Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: CustomBottomSheet(status: status),
+              );
+            });
+      },
       child: Row(
         children: [
           Icon(
