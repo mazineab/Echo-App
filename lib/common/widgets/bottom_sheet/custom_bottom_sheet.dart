@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/common/widgets/custom_list_tile.dart';
-import 'package:myapp/data/models/comment.dart';
-import 'package:myapp/data/models/user.dart' as MyUser;
+import 'package:myapp/data/models/user.dart' as myuser;
 import 'package:myapp/featues/home/controller/home_controller.dart';
 import '../../../data/models/status.dart';
 
@@ -27,11 +26,11 @@ class CustomBottomSheet extends StatelessWidget {
                     ),
                   )
                 : Padding(
-                    padding: const EdgeInsets.only(bottom: 60.0, top: 20),
+                    padding: const EdgeInsets.only(bottom: 20.0, top: 20),
                     child: ListView.builder(
                       itemCount: status.listComments!.length,
                       itemBuilder: (context, index) {
-                        MyUser.User user = controller.listUsers.first;
+                        myuser.User user = controller.listUsers.first;
                         for (var e in controller.listUsers) {
                           if (e.id == status.listComments![index].userId) {
                             user = e;
@@ -40,9 +39,12 @@ class CustomBottomSheet extends StatelessWidget {
                             continue;
                           }
                         }
-                        return CustomListTile(
-                          title: user.getFullName(),
-                          subtitle: status.listComments![index].content,
+                        return Container(
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          child: CustomListTile(
+                            title: user.getFullName(),
+                            subtitle: status.listComments![index].content,
+                          ),
                         );
                       },
                     ),
@@ -53,7 +55,7 @@ class CustomBottomSheet extends StatelessWidget {
             margin: const EdgeInsets.only(
                 bottom: 10, left: 10, right: 10), // Bottom margin for spacing
             decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 215, 212, 212),
+              color:const Color.fromARGB(69, 215, 212, 212),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Row(
@@ -69,8 +71,9 @@ class CustomBottomSheet extends StatelessWidget {
                 ),
                 IconButton(
                   icon: const Icon(Icons.send),
-                  onPressed: () {
-                    controller.commentUpdate(status.id!);
+                  onPressed: () async{
+                    await controller.commentUpdate(status.id!);
+                    controller.textCommentController.clear();
                   },
                 ),
               ],

@@ -12,7 +12,7 @@ class CustomListTile extends StatelessWidget {
       margin: const EdgeInsets.only(left: 20),
       child:Row(
         children: [
-          const ImageWidget(),
+          ImageWidget(userName:title,),
           const SizedBox(
             width: 13,
           ),
