@@ -7,14 +7,14 @@ import 'package:get/get.dart';
 import 'package:myapp/data/models/comment.dart';
 import 'package:myapp/data/models/like.dart';
 import 'package:myapp/data/models/status.dart';
-import 'package:myapp/data/models/user.dart' as MyUser;
+import 'package:myapp/data/models/user.dart' as myuser;
 import 'package:myapp/routes/routes_names.dart';
 
 import '../../../core/utils/localStorage/shared_pref_manager.dart';
 
 class HomeController extends GetxController {
   final fireabseFireStore = FirebaseFirestore.instance;
-  var listUsers = <MyUser.User>[].obs;
+  var listUsers = <myuser.User>[].obs;
   final prefs = Get.find<SharedPredManager>();
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -40,8 +40,8 @@ class HomeController extends GetxController {
         .collection('users')
         .where('id', isEqualTo: id)
         .get() as Map<String, dynamic>;
-    String name = MyUser.User.fromJson(data).firstName;
-    String lastName = MyUser.User.fromJson(data).lastName;
+    String name = myuser.User.fromJson(data).firstName;
+    String lastName = myuser.User.fromJson(data).lastName;
     return "$name $lastName";
   }
 
@@ -53,7 +53,7 @@ class HomeController extends GetxController {
         QuerySnapshot querySnapshot =
             await users.where('id', whereIn: getIds).get();
         querySnapshot.docs.forEach((e) {
-          listUsers.add(MyUser.User.fromJson(e.data() as Map<String, dynamic>));
+          listUsers.add(myuser.User.fromJson(e.data() as Map<String, dynamic>));
         });
       }
       listUsers;
@@ -70,7 +70,7 @@ class HomeController extends GetxController {
       CollectionReference users = firebaseFirestore.collection("users");
       QuerySnapshot querySnapshot = await users.get();
       querySnapshot.docs.forEach((e) {
-        listUsers.add(MyUser.User.fromJson(e.data() as Map<String, dynamic>));
+        listUsers.add(myuser.User.fromJson(e.data() as Map<String, dynamic>));
       });
       listUsers;
       update();
@@ -139,7 +139,7 @@ class HomeController extends GetxController {
         if (userDataSnapshot.docs.isNotEmpty) {
           Map<String, dynamic> userData =
               userDataSnapshot.docs.first.data() as Map<String, dynamic>;
-          MyUser.User currentUser = MyUser.User.fromJson(userData);
+          myuser.User currentUser = myuser.User.fromJson(userData);
           prefs.saveString("userData", jsonEncode(currentUser.toJson()));
         } else {
           await logout();
@@ -162,7 +162,7 @@ class HomeController extends GetxController {
   getUserData() {
     String? userData = prefs.getString("userData");
     if (userData != null && userData.isNotEmpty) {
-      MyUser.User currentUser = MyUser.User.fromJson(jsonDecode(userData));
+      myuser.User currentUser = myuser.User.fromJson(jsonDecode(userData));
       fullName.value = "${currentUser.firstName} ${currentUser.lastName}";
       myId.value = currentUser.id;
     }
@@ -209,6 +209,19 @@ class HomeController extends GetxController {
           .then((DocumentReference doc) {
         fireabseFireStore.collection('status').doc(statusId);
         docRef.collection('comments').doc(doc.id).update({'id': doc.id});
+
+        var commentCollection = fireabseFireStore
+            .collection('status')
+            .doc(statusId)
+            .collection('comments');
+
+        commentCollection.get().then((querySnp) {
+          int lenght = querySnp.size;
+          fireabseFireStore
+            .collection('status')
+            .doc(statusId)
+            .update({'commentsCount': '$lenght'});
+        });
       });
       await getCommants(statusId);
     } catch (e) {

@@ -37,7 +37,7 @@ class HomePage extends StatelessWidget {
               height: 40,
             ),
             ListTile(
-              leading: const ImageWidget(),
+              leading: ImageWidget(userName: '${controller.fullName}',),
               title: Text("Hello ${controller.fullName}"),
               subtitle: const Text("Welcom Back"),
               trailing: IconButton(

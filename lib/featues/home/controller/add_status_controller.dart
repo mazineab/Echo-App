@@ -8,7 +8,6 @@ import 'package:myapp/data/models/enums.dart';
 import 'package:myapp/data/models/tag.dart';
 import 'package:myapp/data/models/user.dart';
 
-import '../../../data/models/comment.dart';
 import '../../../data/models/like.dart';
 
 class AddStatusController extends GetxController {
@@ -136,7 +135,7 @@ class AddStatusController extends GetxController {
         "userId": uid.value,
         "content": statusController.text,
         'listTags': listSelectedTags.map((e) => e.toJson()).toList(),
-        // 'listComments': <Comment>[],
+        'commantsCount': '',
         'listLikes': <Like>[]
       };
       await fireabseFireStore
