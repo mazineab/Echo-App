@@ -27,7 +27,7 @@ class User {
       lastName: json['lastName'],
       email: json['email'],
       phoneNumber: json['phoneNumber'],
-      sexe: json['sexe']=="male"?Sexe.male:Sexe.female,
+      sexe: json['sexe'] == "male" ? Sexe.male : Sexe.female,
       password: json['password'],
     );
   }
@@ -39,8 +39,10 @@ class User {
       'lastName': lastName,
       'email': email,
       'phoneNumber': phoneNumber,
-      'sexe':sexe==Sexe.male?"male":"femel",
+      'sexe': sexe == Sexe.male ? "male" : "femel",
       'password': password,
     };
   }
+
+  getFullName() => "$firstName $lastName";
 }
