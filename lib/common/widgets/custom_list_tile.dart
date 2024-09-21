@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:myapp/common/widgets/image_widget.dart';
-import 'package:myapp/featues/home/controller/home_controller.dart';
 
 class CustomListTile extends StatelessWidget {
   final String title;
