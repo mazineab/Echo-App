@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/common/widgets/custom_list_tile.dart';
-import 'package:myapp/data/models/user.dart' as myuser;
 import 'package:myapp/featues/home/controller/home_controller.dart';
 import '../../../data/models/status.dart';
 
@@ -14,11 +13,13 @@ class CustomBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<HomeController>();
     return SizedBox(
-      height: 400, // Fixed height of 400
+      height: MediaQuery.of(context).size.height / 2, // Fixed height of 400
       child: Column(
         children: [
           Expanded(
-            child: status.listComments!.isEmpty
+            child: GetBuilder<HomeController>(builder: (_) {
+              return 
+              status.listComments!.isEmpty
                 ? const Center(
                     child: Text(
                       'No comments yet',
@@ -26,36 +27,30 @@ class CustomBottomSheet extends StatelessWidget {
                     ),
                   )
                 : Padding(
-                    padding: const EdgeInsets.only(bottom: 20.0, top: 20),
-                    child: ListView.builder(
-                      itemCount: status.listComments!.length,
-                      itemBuilder: (context, index) {
-                        myuser.User user = controller.listUsers.first;
-                        for (var e in controller.listUsers) {
-                          if (e.id == status.listComments![index].userId) {
-                            user = e;
-                            break;
-                          } else {
-                            continue;
-                          }
-                        }
+                      padding: const EdgeInsets.only(bottom: 20.0, top: 20),
+                      child: ListView.builder(
+                        itemCount: status.listComments!.length,
+                        itemBuilder: (context, index) {
                         return Container(
                           margin: const EdgeInsets.symmetric(vertical: 10),
                           child: CustomListTile(
-                            title: user.getFullName(),
-                            subtitle: status.listComments![index].content,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                              isComment: true,
+                              title: status.listComments![index].userFullName ??
+                                  '',
+                              subtitle: status.listComments![index].content,
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             margin: const EdgeInsets.only(
-                bottom: 10, left: 10, right: 10), // Bottom margin for spacing
+                bottom: 10, left: 10, right: 10),
             decoration: BoxDecoration(
-              color:const Color.fromARGB(69, 215, 212, 212),
+              color: const Color.fromARGB(69, 215, 212, 212),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Row(
@@ -71,8 +66,17 @@ class CustomBottomSheet extends StatelessWidget {
                 ),
                 IconButton(
                   icon: const Icon(Icons.send),
-                  onPressed: () async{
-                    await controller.commentUpdate(status.id!);
+                  onPressed: () async {
+                    try {
+                      await controller.commentUpdate(status.id!);
+                      status.commentCount = (int.parse(status.commentCount == ''
+                                  ? '0'
+                                  : status.commentCount ?? '0') +
+                              1)
+                          .toString();
+                    } catch (e) {
+                      Exception(e);
+                    }
                     controller.textCommentController.clear();
                   },
                 ),

@@ -7,6 +7,7 @@ import 'package:myapp/core/utils/localStorage/shared_pref_manager.dart';
 import 'package:myapp/data/models/enums.dart';
 import 'package:myapp/data/models/tag.dart';
 import 'package:myapp/data/models/user.dart';
+import 'package:myapp/featues/home/controller/home_controller.dart';
 
 import '../../../data/models/like.dart';
 
@@ -135,8 +136,11 @@ class AddStatusController extends GetxController {
         "userId": uid.value,
         "content": statusController.text,
         'listTags': listSelectedTags.map((e) => e.toJson()).toList(),
-        'commantsCount': '',
-        'listLikes': <Like>[]
+        'commentsCount': '',
+        'fullUserName': fullname.value,
+        // 'listComments': <Comment>[],
+        'listLikes': <Like>[],
+        'createAt': DateTime.now().toString()
       };
       await fireabseFireStore
           .collection('status')
@@ -146,16 +150,14 @@ class AddStatusController extends GetxController {
             .collection('status')
             .doc(doc.id)
             .update({'id': doc.id}).then((_) async {
-          await fireabseFireStore
-              .collection('status')
-              .doc(doc.id)
-              .collection('comments')
-              .add({});
           statusController.text = '';
           listSelectedTags.clear();
         });
       });
       Get.snackbar("Success ", "Success add status");
+      
+      Get.find<HomeController>().listStatus.clear();
+      Get.find<HomeController>().getStatus();
     } catch (e) {
       Get.snackbar("Error ", "Faild to add this status");
     } finally {

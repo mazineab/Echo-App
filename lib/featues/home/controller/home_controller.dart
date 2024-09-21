@@ -22,14 +22,23 @@ class HomeController extends GetxController {
   var isLoading = true.obs;
   var fullName = "".obs;
   var myId = ''.obs;
+  var isEmptyList = false.obs;
 
-  Future<void> getStatus() async {
+  Future<void> getStatus({bool isRefresh = false}) async {
+    if (isRefresh) {
+      listStatus.clear();
+    }
     try {
       CollectionReference status = fireabseFireStore.collection('status');
       QuerySnapshot querySnapshot = await status.get();
-      querySnapshot.docs.forEach((e) {
+      for (var e in querySnapshot.docs) {
         listStatus.add(Status.fromJson(e.data() as Map<String, dynamic>));
-      });
+      }
+      if (listStatus.isEmpty) {
+        isEmptyList.value = true;
+      } else {
+        isEmptyList.value = false;
+      }
     } catch (e) {
       throw Exception(e);
     }
@@ -52,9 +61,9 @@ class HomeController extends GetxController {
         CollectionReference users = firebaseFirestore.collection("users");
         QuerySnapshot querySnapshot =
             await users.where('id', whereIn: getIds).get();
-        querySnapshot.docs.forEach((e) {
+        for (var e in querySnapshot.docs) {
           listUsers.add(myuser.User.fromJson(e.data() as Map<String, dynamic>));
-        });
+        }
       }
       listUsers;
       update();
@@ -69,9 +78,9 @@ class HomeController extends GetxController {
     try {
       CollectionReference users = firebaseFirestore.collection("users");
       QuerySnapshot querySnapshot = await users.get();
-      querySnapshot.docs.forEach((e) {
+      for (var e in querySnapshot.docs) {
         listUsers.add(myuser.User.fromJson(e.data() as Map<String, dynamic>));
-      });
+      }
       listUsers;
       update();
     } catch (e) {
@@ -200,6 +209,8 @@ class HomeController extends GetxController {
           id: '',
           userId: myId.value,
           content: textCommentController.text,
+          userFullName: fullName.value,
+          createAt: DateTime.now().toString(),
           statusId: statusId);
       DocumentReference docRef =
           fireabseFireStore.collection('status').doc(statusId);
@@ -218,12 +229,17 @@ class HomeController extends GetxController {
         commentCollection.get().then((querySnp) {
           int lenght = querySnp.size;
           fireabseFireStore
-            .collection('status')
-            .doc(statusId)
-            .update({'commentsCount': '$lenght'});
+              .collection('status')
+              .doc(statusId)
+              .update({'commentsCount': '$lenght'});
         });
       });
+      if(listStatus.firstWhere((e) => e.id == statusId).listComments!.isEmpty){
+        listStatus.firstWhere((e) => e.id == statusId).listComments!.add(comment);
+      }
       await getCommants(statusId);
+      
+      update();
     } catch (e) {
       throw Exception(e);
     }
@@ -239,15 +255,18 @@ class HomeController extends GetxController {
       List<dynamic> comments = querySnp.docs
           .map((doc) => Comment.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
-      comments.removeWhere((e) => e.userId == '');
       for (var st in listStatus) {
         if (st.id == statusId) {
-          st.listComments = comments as List<Comment>?;
+          // st.listComments = comments as List<Comment>?;
+          st.listComments?.assignAll(comments as List<Comment>);
+          st.listComments!.sort((a, b) => DateTime.parse(b.createAt!)
+              .compareTo(DateTime.parse(a.createAt!)));
           break;
         } else {
           continue;
         }
       }
+      update();
     } catch (e) {
       Exception(e);
     }

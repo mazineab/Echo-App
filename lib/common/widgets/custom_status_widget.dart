@@ -4,16 +4,15 @@ import 'package:get/get.dart';
 import 'package:myapp/common/widgets/bottom_sheet/custom_bottom_sheet.dart';
 import 'package:myapp/common/widgets/custom_list_tile.dart';
 import 'package:myapp/data/models/like.dart';
-import 'package:myapp/data/models/user.dart' as myuser;
 import 'package:myapp/featues/home/controller/home_controller.dart';
 
 import '../../data/models/status.dart';
 
 // ignore: must_be_immutable
 class CustomStatusWidget extends StatelessWidget {
-  final myuser.User user;
+  final String fullName;
   final Status status;
-  CustomStatusWidget({super.key, required this.user, required this.status});
+  CustomStatusWidget({super.key, required this.fullName, required this.status});
 
   final controller = Get.find<HomeController>();
   var lenghtOf = 0.obs;
@@ -27,15 +26,18 @@ class CustomStatusWidget extends StatelessWidget {
     return Column(
       children: [
         CustomListTile(
-          title: "${user.firstName} ${user.lastName}",
-          subtitle: "15/09/2024",
+          title: fullName,
+          subtitle: status.formateDate(),
         ),
         Container(
           margin: const EdgeInsets.only(left: 85),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(status.content),
+              Text(
+                status.content,
+                style: const TextStyle(fontSize: 17),
+              ),
               const SizedBox(height: 5),
               Row(
                 children: [
@@ -109,37 +111,39 @@ class CustomStatusWidget extends StatelessWidget {
 
   Widget buildIconCommentText(Status status) {
     return GestureDetector(
-        onTap: () async {
-          await controller.getCommants(status.id!);
-          showModalBottomSheet(
-              isScrollControlled: true,
-              context: Get.context!,
-              builder: (context) {
-                return Padding(
-                  padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                  ),
-                  child: CustomBottomSheet(status: status),
-                );
-              });
-        },
-        child: GetBuilder<HomeController>(builder: (_)=>Row(
-            children: [
-              const Icon(
-                Icons.comment,
-                color: Color.fromARGB(255, 212, 212, 212),
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              Text(status.commentCount == null || status.commentCount!.isEmpty
-                  ? ""
-                  : status.commentCount== '0'
-                      ? ''
-                      : status.commentCount.toString()),
-            ],
-          ),
+      onTap: () async {
+        await controller.getCommants(status.id!);
+        showModalBottomSheet(
+            isScrollControlled: true,
+            context: Get.context!,
+            builder: (context) {
+              return Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: CustomBottomSheet(status: status),
+              );
+            });
+        controller.update();
+      },
+      child: GetBuilder<HomeController>(
+        builder: (_) => Row(
+          children: [
+            const Icon(
+              Icons.comment,
+              color: Color.fromARGB(255, 212, 212, 212),
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            Text(status.commentCount == null || status.commentCount!.isEmpty
+                ? ""
+                : status.commentCount == '0'
+                    ? ''
+                    : status.commentCount.toString()),
+          ],
         ),
-      );
+      ),
+    );
   }
 }
