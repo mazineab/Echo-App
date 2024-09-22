@@ -6,7 +6,6 @@ import '../../../data/models/status.dart';
 
 class CustomBottomSheet extends StatelessWidget {
   final Status status;
-
   const CustomBottomSheet({super.key, required this.status});
 
   @override
