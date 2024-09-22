@@ -7,8 +7,8 @@ import 'package:myapp/core/utils/localStorage/shared_pref_manager.dart';
 import 'package:myapp/data/models/enums.dart';
 import 'package:myapp/data/models/tag.dart';
 import 'package:myapp/data/models/user.dart';
+import 'package:myapp/featues/home/controller/home_controller.dart';
 
-import '../../../data/models/comment.dart';
 import '../../../data/models/like.dart';
 
 class AddStatusController extends GetxController {
@@ -21,35 +21,35 @@ class AddStatusController extends GetxController {
   var uid = "".obs;
   var listSelectedTags = <Tag>[].obs;
   final List<Tag> tags = [
-    Tag(Tags.Development,icon:Icons.code),
-    Tag(Tags.Economy,icon:Icons.monetization_on),
-    Tag(Tags.Technology,icon:Icons.computer),
-    Tag(Tags.Science,icon:Icons.science),
-    Tag(Tags.Health,icon:Icons.health_and_safety),
-    Tag(Tags.Education,icon:Icons.school),
-    Tag(Tags.Environment,icon:Icons.nature),
-    Tag(Tags.Politics,icon:Icons.gavel),
-    Tag(Tags.Culture,icon:Icons.public),
-    Tag(Tags.Society,icon:Icons.group),
-    Tag(Tags.Sports,icon:Icons.sports),
-    Tag(Tags.Entertainment,icon:Icons.theater_comedy),
-    Tag(Tags.Art,icon:Icons.palette),
-    Tag(Tags.Travel,icon:Icons.travel_explore),
-    Tag(Tags.Food,icon:Icons.food_bank),
-    Tag(Tags.Fashion,icon:Icons.style),
-    Tag(Tags.Fitness,icon:Icons.fitness_center),
-    Tag(Tags.Music,icon:Icons.music_note),
-    Tag(Tags.Movies,icon:Icons.movie),
-    Tag(Tags.Books,icon:Icons.book),
-    Tag(Tags.Gaming,icon:Icons.videogame_asset),
-    Tag(Tags.Business,icon:Icons.business),
-    Tag(Tags.Finance,icon:Icons.attach_money),
-    Tag(Tags.Innovation,icon:Icons.lightbulb),
-    Tag(Tags.News,icon:Icons.article),
-    Tag(Tags.History,icon:Icons.history),
-    Tag(Tags.Philosophy,icon:Icons.book_online),
-    Tag(Tags.Psychology,icon:Icons.psychology),
-    Tag(Tags.Nature,icon: Icons.nature_people),
+    Tag(Tags.Development, icon: Icons.code),
+    Tag(Tags.Economy, icon: Icons.monetization_on),
+    Tag(Tags.Technology, icon: Icons.computer),
+    Tag(Tags.Science, icon: Icons.science),
+    Tag(Tags.Health, icon: Icons.health_and_safety),
+    Tag(Tags.Education, icon: Icons.school),
+    Tag(Tags.Environment, icon: Icons.nature),
+    Tag(Tags.Politics, icon: Icons.gavel),
+    Tag(Tags.Culture, icon: Icons.public),
+    Tag(Tags.Society, icon: Icons.group),
+    Tag(Tags.Sports, icon: Icons.sports),
+    Tag(Tags.Entertainment, icon: Icons.theater_comedy),
+    Tag(Tags.Art, icon: Icons.palette),
+    Tag(Tags.Travel, icon: Icons.travel_explore),
+    Tag(Tags.Food, icon: Icons.food_bank),
+    Tag(Tags.Fashion, icon: Icons.style),
+    Tag(Tags.Fitness, icon: Icons.fitness_center),
+    Tag(Tags.Music, icon: Icons.music_note),
+    Tag(Tags.Movies, icon: Icons.movie),
+    Tag(Tags.Books, icon: Icons.book),
+    Tag(Tags.Gaming, icon: Icons.videogame_asset),
+    Tag(Tags.Business, icon: Icons.business),
+    Tag(Tags.Finance, icon: Icons.attach_money),
+    Tag(Tags.Innovation, icon: Icons.lightbulb),
+    Tag(Tags.News, icon: Icons.article),
+    Tag(Tags.History, icon: Icons.history),
+    Tag(Tags.Philosophy, icon: Icons.book_online),
+    Tag(Tags.Psychology, icon: Icons.psychology),
+    Tag(Tags.Nature, icon: Icons.nature_people),
   ];
 
   fetchLocalData() {
@@ -136,8 +136,11 @@ class AddStatusController extends GetxController {
         "userId": uid.value,
         "content": statusController.text,
         'listTags': listSelectedTags.map((e) => e.toJson()).toList(),
-        'listComments': <Comment>[],
-        'listLikes': <Like>[]
+        'commentsCount': '',
+        'fullUserName': fullname.value,
+        // 'listComments': <Comment>[],
+        'listLikes': <Like>[],
+        'createAt': DateTime.now().toString()
       };
       await fireabseFireStore
           .collection('status')
@@ -146,12 +149,15 @@ class AddStatusController extends GetxController {
         fireabseFireStore
             .collection('status')
             .doc(doc.id)
-            .update({'id': doc.id}).then((_) {
+            .update({'id': doc.id}).then((_) async {
           statusController.text = '';
           listSelectedTags.clear();
         });
       });
       Get.snackbar("Success ", "Success add status");
+      
+      Get.find<HomeController>().listStatus.clear();
+      Get.find<HomeController>().getStatus();
     } catch (e) {
       Get.snackbar("Error ", "Faild to add this status");
     } finally {

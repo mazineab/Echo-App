@@ -4,35 +4,40 @@ import 'package:get/get.dart';
 import 'package:myapp/common/widgets/bottom_sheet/custom_bottom_sheet.dart';
 import 'package:myapp/common/widgets/custom_list_tile.dart';
 import 'package:myapp/data/models/like.dart';
-import 'package:myapp/data/models/user.dart' as MyUser;
 import 'package:myapp/featues/home/controller/home_controller.dart';
 
 import '../../data/models/status.dart';
 
 // ignore: must_be_immutable
 class CustomStatusWidget extends StatelessWidget {
-  final MyUser.User user;
+  final String fullName;
   final Status status;
-  CustomStatusWidget({super.key, required this.user, required this.status});
+  CustomStatusWidget({super.key, required this.fullName, required this.status});
 
   final controller = Get.find<HomeController>();
   var lenghtOf = 0.obs;
+  var lenghtOfComments = 0.obs;
   @override
   Widget build(BuildContext context) {
     var likes = status.listLikes!.length.obs;
+    var comments = status.listComments!.length.obs;
     lenghtOf.value = likes.value;
+    lenghtOfComments.value = comments.value;
     return Column(
       children: [
         CustomListTile(
-          title: "${user.firstName} ${user.lastName}",
-          subtitle: "15/09/2024",
+          title: fullName,
+          subtitle: status.formateDate(),
         ),
         Container(
           margin: const EdgeInsets.only(left: 85),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(status.content),
+              Text(
+                status.content,
+                style: const TextStyle(fontSize: 17),
+              ),
               const SizedBox(height: 5),
               Row(
                 children: [
@@ -40,12 +45,7 @@ class CustomStatusWidget extends StatelessWidget {
                   const SizedBox(
                     width: 20,
                   ),
-                  buildIconCommentText(
-                    Icons.comment,
-                    status.listComments == null || status.listComments!.isEmpty
-                        ? ""
-                        : status.listComments!.length.toString(),
-                  ),
+                  buildIconCommentText(status),
                 ],
               ),
               const SizedBox(
@@ -109,10 +109,7 @@ class CustomStatusWidget extends StatelessWidget {
         ));
   }
 
-  Widget buildIconCommentText(
-    IconData icon,
-    String text,
-  ) {
+  Widget buildIconCommentText(Status status) {
     return GestureDetector(
       onTap: () async {
         showModalBottomSheet(
@@ -126,18 +123,25 @@ class CustomStatusWidget extends StatelessWidget {
                 child: CustomBottomSheet(status: status),
               );
             });
+        controller.update();
       },
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            color: const Color.fromARGB(255, 212, 212, 212),
-          ),
-          const SizedBox(
-            width: 5,
-          ),
-          Text(text),
-        ],
+      child: GetBuilder<HomeController>(
+        builder: (_) => Row(
+          children: [
+            const Icon(
+              Icons.comment,
+              color: Color.fromARGB(255, 212, 212, 212),
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            Text(status.commentCount == null || status.commentCount!.isEmpty
+                ? ""
+                : status.commentCount == '0'
+                    ? ''
+                    : status.commentCount.toString()),
+          ],
+        ),
       ),
     );
   }
