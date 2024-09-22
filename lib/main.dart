@@ -3,12 +3,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/core/utils/localStorage/shared_pref_manager.dart';
+import 'package:myapp/featues/home/home_binding.dart';
 import 'package:myapp/routes/routes.dart';
 import 'package:myapp/routes/routes_names.dart';
+import 'common/drawer/custom_drawer_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Get.put(SharedPredManager()).init();
+  Get.put(CustomDrawerController());
   await Firebase.initializeApp(
       options: const FirebaseOptions(
           apiKey: "AIzaSyDo3LadhwhejXoDlUxY7Rt-bSE2AV_a9aI",
@@ -30,6 +33,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+      initialBinding: HomeBinding(),
       getPages: Routes.getApp(),
       initialRoute: FirebaseAuth.instance.currentUser == null
           ? RoutesNames.login

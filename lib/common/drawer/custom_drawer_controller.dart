@@ -15,10 +15,15 @@ class CustomDrawerController extends GetxController {
   // }
 
   setSelectedScreen(DrawerItem item) {
-  if (drawerItem.value != item) {
-    drawerItem.value = item;
+    if (drawerItem.value != item) {
+      drawerItem.value = item;
+    }
   }
-}
+
+  setSelectedHome(){
+    setSelectedScreen(DrawerItem.home);
+    Get.offNamed(RoutesNames.home);
+  }
 
   buildItems() {
     listItems.assignAll([
@@ -36,7 +41,7 @@ class CustomDrawerController extends GetxController {
           iconData: Icons.person,
           onTap: () {
             setSelectedScreen(DrawerItem.profile);
-            Get.offNamed(RoutesNames.profile);
+            Get.toNamed(RoutesNames.profile);
           },
           itemDrawer: DrawerItem.profile),
       CustomItem(
