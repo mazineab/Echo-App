@@ -26,6 +26,7 @@ class CustomStatusWidget extends StatelessWidget {
     return Column(
       children: [
         CustomListTile(
+          id: status.userId,
           title: fullName,
           subtitle: status.formateDate(),
         ),
@@ -112,6 +113,7 @@ class CustomStatusWidget extends StatelessWidget {
   Widget buildIconCommentText(Status status) {
     return GestureDetector(
       onTap: () async {
+        await controller.getCommants(status.id!);
         showModalBottomSheet(
             isScrollControlled: true,
             context: Get.context!,

@@ -13,7 +13,7 @@ class Routes{
         GetPage(name: RoutesNames.register, page:()=>Register()),
         GetPage(name: RoutesNames.home, page:()=>HomePage()),
         GetPage(name: RoutesNames.addStatus, page:()=>AddStatusScreen()),
-        GetPage(name: RoutesNames.profile, page:()=>const Profile()),
+        GetPage(name: RoutesNames.profile, page:()=>Profile()),
         GetPage(name: RoutesNames.setting, page:()=>const Setting()),
     ];
 }
