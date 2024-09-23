@@ -37,6 +37,7 @@ class CustomBottomSheet extends StatelessWidget {
                               title: status.listComments![index].userFullName ??
                                   '',
                               subtitle: status.listComments![index].content,
+                              id:status.listComments![index].userId ,
                             ),
                           );
                         },

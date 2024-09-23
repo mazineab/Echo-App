@@ -20,7 +20,7 @@ class Mydialog {
                       onPressed: () {
                         exit(0);
                       },
-                      child: Text("Yes")),
+                      child: const Text("Yes")),
                 ],
               );
             }) as Widget;

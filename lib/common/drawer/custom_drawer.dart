@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/common/drawer/custom_drawer_controller.dart';
+import 'package:myapp/featues/home/controller/home_controller.dart';
 
 class CustomDrawer extends StatelessWidget {
   CustomDrawer({super.key});
@@ -30,27 +31,33 @@ class CustomDrawer extends StatelessWidget {
     ));
   }
 
-  Widget buildHeader() {
-    return const Column(
+  Widget buildHeader({bool isDrawer=true}) {
+    return Column(
       children: [
-        SizedBox(height: 50),
-        SizedBox(
+        const SizedBox(height: 50),
+        const SizedBox(
           width: 110,
           height: 110,
           child: CircleAvatar(
             backgroundImage: AssetImage("assets/images/profile.jpeg"),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
-        Text(
-          "Mazine Abj",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        isDrawer?Column(
+          children: [
+            Text(
+          Get.find<HomeController>().fullName.value,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
+          ],
+        )
+        :const SizedBox()
+        
       ],
     );
   }

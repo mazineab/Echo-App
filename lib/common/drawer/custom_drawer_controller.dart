@@ -2,17 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/common/drawer/custom_item.dart';
 import 'package:myapp/common/drawer/drawer_item.dart';
+import 'package:myapp/featues/home/controller/home_controller.dart';
 
 import '../../routes/routes_names.dart';
 
 class CustomDrawerController extends GetxController {
   var drawerItem = DrawerItem.home.obs;
   var listItems = <CustomItem>[].obs;
-
-  // setSelectedScreen(DrawerItem item) {
-  //   drawerItem.value = item;
-  //   update();
-  // }
 
   setSelectedScreen(DrawerItem item) {
     if (drawerItem.value != item) {
@@ -64,6 +60,7 @@ class CustomDrawerController extends GetxController {
           title: "logout",
           iconData: Icons.logout,
           onTap: () {
+            Get.find<HomeController>().logout();
             setSelectedScreen(DrawerItem.logout);
             Get.offNamed(RoutesNames.login);
           },

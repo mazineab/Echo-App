@@ -94,7 +94,6 @@ class HomeController extends GetxController {
     try {
       await firebaseAuth.signOut();
       prefs.clearAll();
-      print(myId.value);
       Get.offAllNamed(RoutesNames.login);
     } catch (e) {
       throw Exception(e);
