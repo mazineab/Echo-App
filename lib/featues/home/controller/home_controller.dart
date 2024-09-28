@@ -202,7 +202,7 @@ class HomeController extends GetxController {
   }
 
   var textCommentController = TextEditingController();
-  commentUpdate(String statusId) async {
+  commentUpdate(Status status) async {
     try {
       Comment comment = Comment(
           id: '',
@@ -210,33 +210,33 @@ class HomeController extends GetxController {
           content: textCommentController.text,
           userFullName: fullName.value,
           createAt: DateTime.now().toString(),
-          statusId: statusId);
+          statusId: status.id!);
       DocumentReference docRef =
-          fireabseFireStore.collection('status').doc(statusId);
+          fireabseFireStore.collection('status').doc(status.id!);
       docRef
           .collection('comments')
           .add(comment.toJson())
           .then((DocumentReference doc) {
-        fireabseFireStore.collection('status').doc(statusId);
+        fireabseFireStore.collection('status').doc(status.id!);
         docRef.collection('comments').doc(doc.id).update({'id': doc.id});
 
         var commentCollection = fireabseFireStore
             .collection('status')
-            .doc(statusId)
+            .doc(status.id!)
             .collection('comments');
 
         commentCollection.get().then((querySnp) {
           int lenght = querySnp.size;
           fireabseFireStore
               .collection('status')
-              .doc(statusId)
+              .doc(status.id!)
               .update({'commentsCount': '$lenght'});
         });
       });
-      if(listStatus.firstWhere((e) => e.id == statusId).listComments!.isEmpty){
-        listStatus.firstWhere((e) => e.id == statusId).listComments!.add(comment);
+      if(status.listComments!.isEmpty){
+        status.listComments!.add(comment);
       }
-      await getCommants(statusId);
+      await getCommants(status);
       
       update();
     } catch (e) {
@@ -244,27 +244,19 @@ class HomeController extends GetxController {
     }
   }
 
-  getCommants(String statusId) async {
+  getCommants(Status status) async {
     try {
       QuerySnapshot querySnp = await fireabseFireStore
           .collection('status')
-          .doc(statusId)
+          .doc(status.id)
           .collection('comments')
           .get();
       List<dynamic> comments = querySnp.docs
           .map((doc) => Comment.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
-      for (var st in listStatus) {
-        if (st.id == statusId) {
-          // st.listComments = comments as List<Comment>?;
-          st.listComments?.assignAll(comments as List<Comment>);
-          st.listComments!.sort((a, b) => DateTime.parse(b.createAt!)
-              .compareTo(DateTime.parse(a.createAt!)));
-          break;
-        } else {
-          continue;
-        }
-      }
+      status.listComments!.assignAll(comments as List<Comment>);
+      status.listComments!.sort((a, b) => DateTime.parse(b.createAt!)
+          .compareTo(DateTime.parse(a.createAt!)));
       update();
     } catch (e) {
       Exception(e);

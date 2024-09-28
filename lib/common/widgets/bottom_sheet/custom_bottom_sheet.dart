@@ -68,7 +68,7 @@ class CustomBottomSheet extends StatelessWidget {
                   icon: const Icon(Icons.send),
                   onPressed: () async {
                     try {
-                      await controller.commentUpdate(status.id!);
+                      await controller.commentUpdate(status);
                       status.commentCount = (int.parse(status.commentCount == ''
                                   ? '0'
                                   : status.commentCount ?? '0') +
