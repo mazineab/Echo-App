@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myapp/common/dialogs/myDialog.dart';
+import 'package:myapp/common/dialogs/my_dialog.dart';
 import 'package:myapp/common/drawer/custom_drawer.dart';
 import 'package:myapp/common/widgets/custom_status_widget.dart';
 import 'package:myapp/featues/home/controller/home_controller.dart';
@@ -21,7 +21,7 @@ class HomePage extends StatelessWidget {
       canPop: false,
       onPopInvoked: (didPop) {
         if (!didPop) {
-          Mydialog().dialogExist();
+          MyDialog().dialogExist();
         }
       },
       child: Scaffold(

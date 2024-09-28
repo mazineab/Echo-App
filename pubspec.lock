@@ -21,10 +21,10 @@ packages:
     dependency: "direct main"
     description:
       name: avatars
-      sha256: be833206dfe9c93a815d69f3774bbc5c8c61b9f10a03efd3befbed5405d459a8
+      sha256: c7860372742c627a297e7bacca8193306a0bc6bd766cdf045f5bfca1e0b68df2
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.1"
+    version: "3.0.2"
   boolean_selector:
     dependency: transitive
     description:

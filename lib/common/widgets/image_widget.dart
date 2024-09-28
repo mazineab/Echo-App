@@ -14,7 +14,7 @@ class ImageWidget extends StatelessWidget {
       height: 50,
       child: Avatar(
         name: userName,
-        useCache: true,
+        useCache: false,
         backgroundColor: getRandomColor(),
         textStyle: const TextStyle(color: Colors.white, fontSize: 20),
       ),

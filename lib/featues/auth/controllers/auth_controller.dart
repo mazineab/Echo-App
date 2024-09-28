@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:myapp/core/utils/localStorage/shared_pref_manager.dart';
 import 'package:myapp/data/models/enums.dart';
-import 'package:myapp/data/models/user.dart' as myUser;
+import 'package:myapp/data/models/user.dart' as myuser;
 import 'package:myapp/routes/routes_names.dart';
 
 class AuthController extends GetxController {
@@ -64,7 +64,7 @@ class AuthController extends GetxController {
       UserCredential user = await firabaseAuth.createUserWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
       if (user.user != null) {
-        await fireabseFireStore.collection('users').add(myUser.User(
+        await fireabseFireStore.collection('users').add(myuser.User(
               id: user.user!.uid,
               firstName: firstNameController.text,
               lastName: lastNameController.text,

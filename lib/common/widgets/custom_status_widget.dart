@@ -113,7 +113,7 @@ class CustomStatusWidget extends StatelessWidget {
   Widget buildIconCommentText(Status status) {
     return GestureDetector(
       onTap: () async {
-        await controller.getCommants(status.id!);
+        await controller.getCommants(status);
         showModalBottomSheet(
             isScrollControlled: true,
             context: Get.context!,

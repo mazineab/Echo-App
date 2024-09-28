@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class Mydialog {
+class MyDialog {
   Widget dialogExist() {
     return showDialog(
             context: Get.context!,
