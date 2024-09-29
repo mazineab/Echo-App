@@ -28,20 +28,25 @@ class CustomStatusWidget extends StatelessWidget {
         CustomListTile(
           id: status.userId,
           title: fullName,
-          subtitle: status.formateDate(),
+          subtitle: status.content,
+          isComment: true,
         ),
         Container(
           margin: const EdgeInsets.only(left: 85),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                status.content,
-                style: const TextStyle(fontSize: 17),
-              ),
+              // Text(
+              //   status.content,
+              //   style: const TextStyle(fontSize: 17),
+              // ),
               const SizedBox(height: 5),
               Row(
                 children: [
+                  buildDate(status),
+                  const SizedBox(
+                    width: 20,
+                  ),
                   buildIconLikeText(status),
                   const SizedBox(
                     width: 20,
@@ -58,6 +63,19 @@ class CustomStatusWidget extends StatelessWidget {
         const Divider(
           color: Color.fromARGB(24, 0, 0, 0),
         )
+      ],
+    );
+  }
+
+  Widget buildDate(Status status) {
+    return Row(
+      children: [
+        Icon(Icons.calendar_month, color: Colors.grey.shade400),
+        Text(
+          status.formattedCreatedAt(),
+          style: const TextStyle(
+              fontSize: 15, color: Color.fromARGB(255, 0, 0, 0)),
+        ),
       ],
     );
   }

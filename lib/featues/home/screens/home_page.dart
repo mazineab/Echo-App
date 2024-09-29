@@ -46,9 +46,6 @@ class HomePage extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(
-                  height: 40,
-                ),
                 ListTile(
                   leading: ImageWidget(
                     userName: '${controller.fullName}',
@@ -59,6 +56,9 @@ class HomePage extends StatelessWidget {
                     Get.to(Profile(isMyProfile: false, userId: controller.myId.value));
                   },
                 ),
+                const SizedBox(
+                  height: 10,
+                ),
                 Container(
                     margin: const EdgeInsets.only(left: 20),
                     child: const Text("Recent Status:",
@@ -67,16 +67,18 @@ class HomePage extends StatelessWidget {
                 Expanded(
                   child: controller.isEmptyList.value
                       ? const Center(child: Text("No status yet"))
-                      : ListView.builder(
-                          itemCount: controller.listStatus.length,
-                          itemBuilder: (context, index) {
-                            Status status = controller.listStatus[index];
-                            return CustomStatusWidget(
-                              
-                              fullName: status.fullUserName!,
-                              status: status,
-                            );
-                          }),
+                      : GetBuilder<HomeController>(builder: (_)=>
+                        ListView.builder(
+                            itemCount: controller.listStatus.length,
+                            itemBuilder: (context, index) {
+                              Status status = controller.listStatus[index];
+                              return CustomStatusWidget(
+                                
+                                fullName: status.fullUserName!,
+                                status: status,
+                              );
+                            }),
+                      ),
                 ),
               ],
             );

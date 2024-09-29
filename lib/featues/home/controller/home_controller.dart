@@ -39,6 +39,8 @@ class HomeController extends GetxController {
       } else {
         isEmptyList.value = false;
       }
+      listStatus.sort((a, b) => b.createAt!.compareTo(a.createAt!));
+      update();
     } catch (e) {
       throw Exception(e);
     }
@@ -233,11 +235,11 @@ class HomeController extends GetxController {
               .update({'commentsCount': '$lenght'});
         });
       });
-      if(status.listComments!.isEmpty){
+      if (status.listComments!.isEmpty) {
         status.listComments!.add(comment);
       }
       await getCommants(status);
-      
+
       update();
     } catch (e) {
       throw Exception(e);
@@ -255,8 +257,8 @@ class HomeController extends GetxController {
           .map((doc) => Comment.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
       status.listComments!.assignAll(comments as List<Comment>);
-      status.listComments!.sort((a, b) => DateTime.parse(b.createAt!)
-          .compareTo(DateTime.parse(a.createAt!)));
+      status.listComments!.sort((a, b) =>
+          DateTime.parse(b.createAt!).compareTo(DateTime.parse(a.createAt!)));
       update();
     } catch (e) {
       Exception(e);

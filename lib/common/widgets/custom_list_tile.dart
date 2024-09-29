@@ -41,10 +41,11 @@ class CustomListTile extends StatelessWidget {
                   Text(
                     title,
                     style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+                        fontSize: 19, fontWeight: FontWeight.bold),
                   ),
+                  // isComment?
                   Text(subtitle,
-                      style: TextStyle(fontSize: isComment ? 16 : 13))
+                      style: TextStyle(fontSize: isComment ? 18 : 13))
                 ],
               ),
             )
