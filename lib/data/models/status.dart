@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:myapp/data/models/comment.dart';
 import 'package:myapp/data/models/like.dart';
 import 'package:myapp/data/models/tag.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class Status {
   String? id;
@@ -72,6 +73,13 @@ class Status {
       Exception(e);
       return '';
     }
+  }
+  String formattedCreatedAt() {
+    if (createAt != null) {
+       DateTime parseDate = DateTime.parse(createAt ?? '');
+      return timeago.format(parseDate, locale: 'en');
+    }
+    return '';
   }
 
   // List<Comment> sortedComments() {
