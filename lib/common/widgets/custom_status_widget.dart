@@ -12,7 +12,8 @@ import '../../data/models/status.dart';
 class CustomStatusWidget extends StatelessWidget {
   final String fullName;
   final Status status;
-  CustomStatusWidget({super.key, required this.fullName, required this.status});
+  final String? profileUrl;
+  CustomStatusWidget({super.key, required this.fullName, required this.status,this.profileUrl});
 
   final controller = Get.find<HomeController>();
   var lenghtOf = 0.obs;
@@ -26,6 +27,7 @@ class CustomStatusWidget extends StatelessWidget {
     return Column(
       children: [
         CustomListTile(
+          profileUrl: profileUrl??'',
           id: status.userId,
           title: fullName,
           subtitle: status.content,

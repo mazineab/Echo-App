@@ -8,11 +8,13 @@ class CustomListTile extends StatelessWidget {
   final String subtitle;
   final bool isComment;
   final String id;
-  const CustomListTile(
+  String? profileUrl;
+  CustomListTile(
       {super.key,
       required this.title,
       required this.subtitle,
       required this.id,
+        this.profileUrl,
       this.isComment = false});
 
   @override
@@ -29,6 +31,7 @@ class CustomListTile extends StatelessWidget {
         child: Row(
           children: [
             ImageWidget(
+              imageUrl: profileUrl??'',
               userName: title,
             ),
             const SizedBox(

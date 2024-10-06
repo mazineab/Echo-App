@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/common/drawer/custom_drawer_controller.dart';
-import 'package:myapp/featues/home/controller/home_controller.dart';
+
+import '../widgets/image_widget.dart';
 
 class CustomDrawer extends StatelessWidget {
   CustomDrawer({super.key});
@@ -32,33 +33,33 @@ class CustomDrawer extends StatelessWidget {
   }
 
   Widget buildHeader({bool isDrawer=true}) {
-    return Column(
-      children: [
-        const SizedBox(height: 50),
-        const SizedBox(
-          width: 110,
-          height: 110,
-          child: CircleAvatar(
-            backgroundImage: AssetImage("assets/images/profile.jpeg"),
+    return Obx(()=>
+      Column(
+        children: [
+          isDrawer?const SizedBox(height: 50):const SizedBox(),
+          SizedBox(
+            width: 100,
+            height: 100,
+            child: ImageWidget(imageUrl:controller.user.value.imageUrl??'',userName:controller.user.value.getFullName()),
           ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        isDrawer?Column(
-          children: [
-            Text(
-          Get.find<HomeController>().fullName.value,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-          ],
-        )
-        :const SizedBox()
-        
-      ],
+          const SizedBox(
+            height: 10,
+          ),
+          isDrawer?Column(
+            children: [
+              Text(
+                controller.user.value.getFullName(),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+            ],
+          )
+          :const SizedBox()
+
+        ],
+      ),
     );
   }
 }

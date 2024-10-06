@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class ImageWidget extends StatelessWidget {
-  String userName;
-  ImageWidget({super.key,required this.userName});
+  String? userName;
+  String? imageUrl;
+  ImageWidget({super.key,this.userName,this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +15,9 @@ class ImageWidget extends StatelessWidget {
       height: 50,
       child: Avatar(
         name: userName,
-        useCache: false,
-        backgroundColor: getRandomColor(),
+        sources: [if(imageUrl!=null && imageUrl!.isNotEmpty) NetworkSource(imageUrl!)],
+        useCache: true,
+        backgroundColor:imageUrl!=null && imageUrl!.isNotEmpty ?Colors.transparent:getRandomColor(),
         textStyle: const TextStyle(color: Colors.white, fontSize: 20),
       ),
     );
@@ -29,4 +31,5 @@ class ImageWidget extends StatelessWidget {
       1.0, // Opacity
     );
   }
+
 }

@@ -34,6 +34,7 @@ class CustomBottomSheet extends StatelessWidget {
                           margin: const EdgeInsets.symmetric(vertical: 10),
                           child: CustomListTile(
                               isComment: true,
+                              profileUrl: status.listComments![index].profileUrl,
                               title: status.listComments![index].userFullName ??
                                   '',
                               subtitle: status.listComments![index].content,
