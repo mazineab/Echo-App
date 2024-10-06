@@ -44,7 +44,10 @@ class Profile extends StatelessWidget {
           :Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(child: CustomDrawer().buildHeader(isDrawer: false)),
+              Padding(
+                padding: const EdgeInsets.only(left: 20,top: 10),
+                child: CustomDrawer().buildHeader(isDrawer: false),
+              ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(

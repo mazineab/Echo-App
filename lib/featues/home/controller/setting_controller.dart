@@ -1,45 +1,107 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/common/drawer/custom_drawer_controller.dart';
 import 'package:myapp/core/services/image_picker_service.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:myapp/core/services/permission_service.dart';
+import 'package:myapp/data/models/user.dart' as my_user;
+import 'package:myapp/featues/home/controller/current_user_controller.dart';
+import 'package:myapp/featues/home/controller/home_controller.dart';
+import 'package:path/path.dart' as pth;
+
+import '../../../core/utils/localStorage/shared_pref_manager.dart';
 
 class SettingController extends GetxController {
+  final currentController=Get.find<CurrentUserController>();
+  final homeController=Get.find<HomeController>();
+  final drawerController=Get.find<CustomDrawerController>();
   final ImagePickerService _imagePickerService = Get.put(ImagePickerService());
+  final PermissionService _permissionService=Get.put(PermissionService());
+  final FirebaseFirestore _firebaseFirestore=FirebaseFirestore.instance;
+  final SharedPredManager prefs = Get.find<SharedPredManager>();
+  final FirebaseStorage firebaseStorage = FirebaseStorage.instanceFor(
+      bucket: "gs://fir-appactions.appspot.com"
+  );
 
   File? file;
+  var url = ''.obs;
+  var user = my_user.User.empty().obs;
 
-  Future<void> chooseFromGallery() async {
-    // Ensure permissions are granted
-    bool permissionGranted = await requestPermissions();
-    if (!permissionGranted) {
-      Get.snackbar("Permission Denied", "You need to grant the required permissions.");
-      return;
-    }
-
-    // Choose image from gallery
-    var image = await _imagePickerService.chooseImageFromGallery();
-    if (image != null) {
-      file = image;
-      update();  // Notify UI of the updated file
-    }
+  @override
+  onInit(){
+    super.onInit();
+    getCurrentUser();
   }
 
+  getCurrentUser() {
+    user.value =
+        my_user.User.fromJson(jsonDecode(prefs.getString('userData') ?? ''));
+  }
+
+  saveUserData(my_user.User updatedUser)async{
+    try{
+      await prefs.saveString('userData',jsonEncode(updatedUser.toJson()));
+      currentController.getUserData();
+      homeController.getUserData();
+      drawerController.getUserData();
+    }catch(e){
+      Exception(e);
+    }
+
+  }
+
+
+  Future<void> chooseFromGallery() async {
+      bool permissionGranted = await _permissionService.requestGallery();
+      if (!permissionGranted) {
+        Get.snackbar("Permission Denied", "You need to grant the required permissions.");
+        return;
+      }
+
+      var image = await _imagePickerService.chooseImageFromGallery();
+      if (image != null) {
+        try {
+          var imageName = pth.basename(image.path);
+          var refStorage = firebaseStorage.ref("profiles/$imageName");
+          await refStorage.putFile(image);
+          url.value = await refStorage.getDownloadURL();
+          user.value.imageUrl=url.value;
+          await saveUserData(user.value);
+          QuerySnapshot QrSnap= await _firebaseFirestore.collection('users').where('id',isEqualTo: user.value.id).get();
+          await QrSnap.docs.first.reference.update(user.value.toJson());
+          Get.snackbar("Upload Successful", "Image uploaded successfully!");
+        } catch (e) {
+          Get.snackbar("Upload Failed", "Failed to upload image: $e");
+          Exception(e);
+        }
+      }
+    update();
+  }
+
+
   Future<void> chooseFromCamera() async {
-    // Ensure permissions are granted
-    bool permissionGranted = await requestPermissions();
+    bool permissionGranted = await _permissionService.requestCamera();
     if (!permissionGranted) {
       Get.snackbar("Permission Denied", "You need to grant the required permissions.");
       return;
     }
-
-    // Choose image from camera
-    var image = await _imagePickerService.chooseImageFromCamera();
-    if (image != null) {
-      file = image;
-      update();  // Notify UI of the updated file
+    try{
+      var image = await _imagePickerService.chooseImageFromCamera();
+      if (image != null) {
+        var imageName = pth.basename(image.path);
+        var refStorage = firebaseStorage.ref("profiles/$imageName");
+        await refStorage.putFile(image);
+        url.value = await refStorage.getDownloadURL();
+      }
+    }catch(e){
+      Exception(e);
     }
+    update();
+
   }
 
   Future<void> dialogChoose() async {
@@ -52,14 +114,14 @@ class SettingController extends GetxController {
             TextButton(
               onPressed: () {
                 chooseFromGallery();
-                Get.back();  // Close the dialog
+                Get.back();
               },
               child: const Text("Gallery"),
             ),
             TextButton(
               onPressed: () {
                 chooseFromCamera();
-                Get.back();  // Close the dialog
+                Get.back();
               },
               child: const Text("Camera"),
             ),
@@ -67,36 +129,5 @@ class SettingController extends GetxController {
         );
       },
     );
-  }
-
-  Future<bool> requestPermissions() async {
-    // Request camera and storage permissions
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.camera,
-      Permission.storage
-    ].request();
-
-    bool allGranted = statuses.values.every((status) => status.isGranted);
-
-    if (!allGranted) {
-      // Handle if permission is permanently denied
-      if (statuses[Permission.camera]?.isPermanentlyDenied == true ||
-          statuses[Permission.storage]?.isPermanentlyDenied == true) {
-        await Get.defaultDialog(
-          title: "Permission required",
-          content: const Text("You need to grant the required permissions in settings."),
-          confirm: TextButton(
-            onPressed: () {
-              openAppSettings(); // Redirect to app settings
-              Get.back();
-            },
-            child: const Text("Open Settings"),
-          ),
-        );
-        return false;
-      }
-    }
-
-    return allGranted;
   }
 }
