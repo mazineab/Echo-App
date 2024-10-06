@@ -8,6 +8,7 @@ class User {
   String phoneNumber;
   String password;
   Sexe sexe;
+  String? imageUrl;
   String? bio;
   List<dynamic>? roles;
 
@@ -19,7 +20,8 @@ class User {
     required this.sexe,
     required this.phoneNumber,
     required this.password,
-    this.bio
+    this.bio,
+    this.imageUrl
   });
 
   User.empty()
@@ -30,7 +32,9 @@ class User {
         sexe = Sexe.male,
         phoneNumber = '',
         bio='',
+        imageUrl='',
         password = '';
+
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -41,7 +45,8 @@ class User {
       phoneNumber: json['phoneNumber'],
       sexe: json['sexe'] == "male" ? Sexe.male : Sexe.female,
       password: json['password'],
-      bio:json['bio']
+      bio:json['bio'],
+      imageUrl: json['imageUrl']
     );
   }
 
@@ -54,7 +59,8 @@ class User {
       'phoneNumber': phoneNumber,
       'sexe': sexe == Sexe.male ? "male" : "femel",
       'password': password,
-      'bio':bio
+      'bio':bio,
+      'imageUrl':imageUrl
     };
   }
 

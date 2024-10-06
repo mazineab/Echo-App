@@ -9,6 +9,7 @@ class Status {
   String content;
   String userId;
   String? fullUserName;
+  String? profileUrl;
   List<Tag> listTags;
   String? commentCount;
   List<Like>? listLikes;
@@ -24,7 +25,9 @@ class Status {
       required this.fullUserName,
       required this.listComments,
       required this.createAt,
-      required this.listLikes});
+      required this.listLikes,
+        this.profileUrl
+      });
 
   factory Status.fromJson(Map<String, dynamic> data) {
     return Status(
@@ -43,6 +46,7 @@ class Status {
                 .map((e) => Comment.fromJson(e as Map<String, dynamic>))
                 .toList()
             : <Comment>[],
+        profileUrl: data['profileUrl']??'',
         createAt: data['createAt'] ?? '',
         listLikes: data['listLikes'] != null
             ? (data['listLikes'] as List<dynamic>)
@@ -61,7 +65,8 @@ class Status {
       'commentsCount': commentCount ?? '',
       'fullUserName': fullUserName ?? '',
       'listLikes': listLikes,
-      'createAt': createAt
+      'createAt': createAt,
+      'profileUrl':profileUrl
     };
   }
 

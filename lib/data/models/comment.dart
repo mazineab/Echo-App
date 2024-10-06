@@ -4,6 +4,7 @@ class Comment {
   String content;
   String statusId;
   String? userFullName;
+  String? profileUrl;
   String? createAt;
   // List<Comment>? listComments;
 
@@ -13,7 +14,8 @@ class Comment {
       required this.content,
       required this.statusId,
       required this.userFullName,
-      required this.createAt
+      required this.createAt,
+      this.profileUrl
       // this.listComments
       });
 
@@ -24,7 +26,8 @@ class Comment {
         content: data['content'] ?? '',
         statusId: data['statusId'] ?? '',
         userFullName: data['userFullName'] ?? '',
-        createAt:data['createAt'] ?? ''
+        createAt:data['createAt'] ?? '',
+        profileUrl: data['profileUrl']
         // listComment: data['listComment'] ?? <Comment>[]
         // listComments: data['listComments'] !=null
         // ?(data['listComments'] as List<Comment>).map((e)=>Comment.fromJson(e as Map<String,dynamic>)).toList()
@@ -39,6 +42,7 @@ class Comment {
       'statusId': statusId,
       'content': content,
       'userFullName': userFullName,
+      'profileUrl':profileUrl,
       'createAt':createAt
       // 'listComment': listComments,
     };
