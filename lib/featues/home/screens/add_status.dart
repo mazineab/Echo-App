@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/common/drawer/custom_drawer.dart';
+import 'package:myapp/common/widgets/image_widget.dart';
 import 'package:myapp/featues/home/controller/add_status_controller.dart';
 import '../../../common/drawer/custom_drawer_controller.dart';
 
@@ -28,17 +29,12 @@ class AddStatusScreen extends StatelessWidget {
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.02,
             ),
-            ListTile(
-              leading: Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    image: const DecorationImage(
-                        image: AssetImage("assets/images/profile.jpeg"),
-                        fit: BoxFit.fill)),
-              ),
-              title: Text(controller.fullname.value),
+            Row(
+                children: [SizedBox(width: 10,),
+              ImageWidget(userName: controller.fullname.value,imageUrl: controller.profileUrl.value),
+                  const SizedBox(width: 10),
+                  Text(controller.fullname.value,style:const TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+              ]
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.12),
             Container(

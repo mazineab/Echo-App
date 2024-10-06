@@ -18,6 +18,7 @@ class AddStatusController extends GetxController {
   var isload = false.obs;
 
   var fullname = "".obs;
+  var profileUrl = "".obs;
   var uid = "".obs;
   var listSelectedTags = <Tag>[].obs;
   final List<Tag> tags = [
@@ -57,7 +58,9 @@ class AddStatusController extends GetxController {
     if (userData != null) {
       User user = User.fromJson(jsonDecode(userData));
       fullname.value = "${user.firstName} ${user.lastName}";
+      profileUrl.value=user.imageUrl??'';
       uid.value = user.id;
+      profileUrl.value=user.imageUrl??'';
     }
   }
 
@@ -138,6 +141,7 @@ class AddStatusController extends GetxController {
         'listTags': listSelectedTags.map((e) => e.toJson()).toList(),
         'commentsCount': '',
         'fullUserName': fullname.value,
+        'profileUrl':profileUrl.value,
         // 'listComments': <Comment>[],
         'listLikes': <Like>[],
         'createAt': DateTime.now().toString()

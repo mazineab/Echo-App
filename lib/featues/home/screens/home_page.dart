@@ -7,12 +7,12 @@ import 'package:myapp/featues/home/controller/home_controller.dart';
 import 'package:myapp/featues/home/screens/profile.dart';
 import 'package:myapp/routes/routes_names.dart';
 
+import '../../../common/drawer/custom_drawer_controller.dart';
 import '../../../common/widgets/image_widget.dart';
 import '../../../data/models/status.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
-
   final HomeController controller = Get.put(HomeController());
 
   @override
@@ -40,16 +40,14 @@ class HomePage extends StatelessWidget {
         body: RefreshIndicator(
           onRefresh: () => controller.getStatus(isRefresh: true),
           child: Obx(() {
-            if (controller.isLoading.value) {
+            if (controller.isLoading.value && controller.fullName.value.isNotEmpty) {
               return const Center(child: CircularProgressIndicator());
             }
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ListTile(
-                  leading: ImageWidget(
-                    userName: '${controller.fullName}',
-                  ),
+                  leading: ImageWidget(imageUrl: controller.imageUrl.value,userName: controller.fullName.value),
                   title: Text("Hello ${controller.fullName}"),
                   subtitle: const Text("Welcom Back"),
                   onTap: () {
@@ -73,7 +71,7 @@ class HomePage extends StatelessWidget {
                             itemBuilder: (context, index) {
                               Status status = controller.listStatus[index];
                               return CustomStatusWidget(
-                                
+                                profileUrl: status.profileUrl??'',
                                 fullName: status.fullUserName!,
                                 status: status,
                               );

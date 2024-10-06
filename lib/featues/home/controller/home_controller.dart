@@ -8,28 +8,34 @@ import 'package:myapp/data/models/comment.dart';
 import 'package:myapp/data/models/like.dart';
 import 'package:myapp/data/models/status.dart';
 import 'package:myapp/data/models/user.dart' as myuser;
+import 'package:myapp/featues/home/controller/current_user_controller.dart';
 import 'package:myapp/routes/routes_names.dart';
 
+import '../../../common/drawer/custom_drawer_controller.dart';
 import '../../../core/utils/localStorage/shared_pref_manager.dart';
 
 class HomeController extends GetxController {
-  final fireabseFireStore = FirebaseFirestore.instance;
+  final currentUserController=Get.find<CurrentUserController>();
+  myuser.User cur=myuser.User.empty();
+
   var listUsers = <myuser.User>[].obs;
   final prefs = Get.find<SharedPredManager>();
-  final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  final FirebaseFirestore firebaseFireStore = FirebaseFirestore.instance;
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   List<Status> listStatus = <Status>[].obs;
   var isLoading = true.obs;
   var fullName = "".obs;
   var myId = ''.obs;
+  var imageUrl=''.obs;
   var isEmptyList = false.obs;
+
 
   Future<void> getStatus({bool isRefresh = false}) async {
     if (isRefresh) {
       listStatus.clear();
     }
     try {
-      CollectionReference status = fireabseFireStore.collection('status');
+      CollectionReference status = firebaseFireStore.collection('status');
       QuerySnapshot querySnapshot = await status.get();
       for (var e in querySnapshot.docs) {
         listStatus.add(Status.fromJson(e.data() as Map<String, dynamic>));
@@ -47,7 +53,7 @@ class HomeController extends GetxController {
   }
 
   Future<String> getUserNameById(String? id) async {
-    Map<String, dynamic> data = await fireabseFireStore
+    Map<String, dynamic> data = await firebaseFireStore
         .collection('users')
         .where('id', isEqualTo: id)
         .get() as Map<String, dynamic>;
@@ -60,7 +66,7 @@ class HomeController extends GetxController {
     try {
       var getIds = listStatus.map((e) => e.userId).toList();
       if (getIds.isNotEmpty) {
-        CollectionReference users = firebaseFirestore.collection("users");
+        CollectionReference users = firebaseFireStore.collection("users");
         QuerySnapshot querySnapshot =
             await users.where('id', whereIn: getIds).get();
         for (var e in querySnapshot.docs) {
@@ -78,12 +84,12 @@ class HomeController extends GetxController {
 
   Future<void> getAllUsers() async {
     try {
-      CollectionReference users = firebaseFirestore.collection("users");
+      CollectionReference users = firebaseFireStore.collection("users");
       QuerySnapshot querySnapshot = await users.get();
       for (var e in querySnapshot.docs) {
-        listUsers.add(myuser.User.fromJson(e.data() as Map<String, dynamic>));
+        // listUsers.add(myuser.User.fromJson(e.data() as Map<String, dynamic>));
       }
-      listUsers;
+      // listUsers;
       update();
     } catch (e) {
       throw Exception(e);
@@ -92,15 +98,6 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> logout() async {
-    try {
-      await firebaseAuth.signOut();
-      prefs.clearAll();
-      Get.offAllNamed(RoutesNames.login);
-    } catch (e) {
-      throw Exception(e);
-    }
-  }
 
   showAlertAddStatus() {
     showDialog(
@@ -138,50 +135,48 @@ class HomeController extends GetxController {
         });
   }
 
-  getDataOfCurrentUser() async {
-    try {
-      User? user = firebaseAuth.currentUser;
-      if (user != null) {
-        QuerySnapshot userDataSnapshot = await firebaseFirestore
-            .collection('users')
-            .where("id", isEqualTo: user.uid)
-            .get();
-        if (userDataSnapshot.docs.isNotEmpty) {
-          Map<String, dynamic> userData =
-              userDataSnapshot.docs.first.data() as Map<String, dynamic>;
-          myuser.User currentUser = myuser.User.fromJson(userData);
-          prefs.saveString("userData", jsonEncode(currentUser.toJson()));
-        } else {
-          await logout();
-        }
-      } else {
-        await logout();
-      }
-    } catch (e) {
-      throw Exception("Error fetching user data: $e");
-    }
-  }
-
-  checkAndSave() async {
-    String? userData = prefs.getString("userData");
-    if (userData == null || userData.isEmpty) {
-      await getDataOfCurrentUser();
-    }
-  }
+  // getDataOfCurrentUser() async {
+  //   try {
+  //     User? user = firebaseAuth.currentUser;
+  //     if (user != null) {
+  //       QuerySnapshot userDataSnapshot = await firebaseFirestore
+  //           .collection('users')
+  //           .where("id", isEqualTo: user.uid)
+  //           .get();
+  //       if (userDataSnapshot.docs.isNotEmpty) {
+  //         Map<String, dynamic> userData =
+  //             userDataSnapshot.docs.first.data() as Map<String, dynamic>;
+  //         myuser.User currentUser = myuser.User.fromJson(userData);
+  //         prefs.saveString("userData", jsonEncode(currentUser.toJson()));
+  //       } else {
+  //         await currentUserController.logout();
+  //       }
+  //     } else {
+  //       await currentUserController.logout();
+  //     }
+  //   } catch (e) {
+  //     throw Exception("Error fetching user data: $e");
+  //   }
+  // }
+  //
+  // checkAndSave() async {
+  //   String? userData = prefs.getString("userData");
+  //   if (userData == null || userData.isEmpty) {
+  //     await getDataOfCurrentUser();
+  //   }
+  // }
 
   getUserData() {
-    String? userData = prefs.getString("userData");
-    if (userData != null && userData.isNotEmpty) {
-      myuser.User currentUser = myuser.User.fromJson(jsonDecode(userData));
+      myuser.User currentUser = currentUserController.me.value;
       fullName.value = "${currentUser.firstName} ${currentUser.lastName}";
       myId.value = currentUser.id;
-    }
+      imageUrl.value=currentUser.imageUrl??'';
   }
 
   likeUpdates(Like like) async {
     try {
       DocumentReference docRef =
-          firebaseFirestore.collection('status').doc(like.status);
+      firebaseFireStore.collection('status').doc(like.status);
       DocumentSnapshot docSnp = await docRef.get();
 
       if (docSnp.exists) {
@@ -203,6 +198,20 @@ class HomeController extends GetxController {
     }
   }
 
+  Future<String?> getProfileOf(String uid)async{
+    try{
+      QuerySnapshot querySnapshot=await firebaseFireStore.collection('users').where('id',isEqualTo:uid).get();
+      if(querySnapshot.docs.isNotEmpty){
+        DocumentSnapshot docSnp=querySnapshot.docs.first;
+        String? profileUrl=docSnp['imageUrl'];
+        return profileUrl;
+      }
+      return '';
+    }catch(e){
+      return '';
+    }
+  }
+
   var textCommentController = TextEditingController();
   commentUpdate(Status status) async {
     try {
@@ -211,25 +220,26 @@ class HomeController extends GetxController {
           userId: myId.value,
           content: textCommentController.text,
           userFullName: fullName.value,
+          profileUrl: imageUrl.value,
           createAt: DateTime.now().toString(),
           statusId: status.id!);
       DocumentReference docRef =
-          fireabseFireStore.collection('status').doc(status.id!);
+      firebaseFireStore.collection('status').doc(status.id!);
       docRef
           .collection('comments')
           .add(comment.toJson())
           .then((DocumentReference doc) {
-        fireabseFireStore.collection('status').doc(status.id!);
+        firebaseFireStore.collection('status').doc(status.id!);
         docRef.collection('comments').doc(doc.id).update({'id': doc.id});
 
-        var commentCollection = fireabseFireStore
+        var commentCollection = firebaseFireStore
             .collection('status')
             .doc(status.id!)
             .collection('comments');
 
         commentCollection.get().then((querySnp) {
           int lenght = querySnp.size;
-          fireabseFireStore
+          firebaseFireStore
               .collection('status')
               .doc(status.id!)
               .update({'commentsCount': '$lenght'});
@@ -248,7 +258,7 @@ class HomeController extends GetxController {
 
   getCommants(Status status) async {
     try {
-      QuerySnapshot querySnp = await fireabseFireStore
+      QuerySnapshot querySnp = await firebaseFireStore
           .collection('status')
           .doc(status.id)
           .collection('comments')
@@ -267,11 +277,10 @@ class HomeController extends GetxController {
 
   @override
   Future<void> onInit() async {
+    Get.put(CustomDrawerController());
     super.onInit();
-    await checkAndSave();
     await getUserData();
     await getStatus();
-    // await getUsers();
     await getAllUsers();
   }
 }

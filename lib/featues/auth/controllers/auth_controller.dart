@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -5,12 +7,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:myapp/core/utils/localStorage/shared_pref_manager.dart';
 import 'package:myapp/data/models/enums.dart';
 import 'package:myapp/data/models/user.dart' as myuser;
+import 'package:myapp/featues/home/controller/current_user_controller.dart';
 import 'package:myapp/routes/routes_names.dart';
 
 class AuthController extends GetxController {
   final firabaseAuth = FirebaseAuth.instance;
   final fireabseFireStore = FirebaseFirestore.instance;
   final prefs = Get.find<SharedPredManager>();
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   var isload = false.obs;
 
   final formKey = GlobalKey<FormState>();
@@ -41,6 +45,7 @@ class AuthController extends GetxController {
       UserCredential user = await firabaseAuth.signInWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
       if (user.user != null) {
+        await getDataOfCurrentUser();
         Get.offNamed(RoutesNames.home);
       }
     } catch (e) {
@@ -87,6 +92,40 @@ class AuthController extends GetxController {
           colorText: Colors.white, backgroundColor: Colors.red);
     } finally {
       isload.value = false;
+    }
+  }
+
+  getDataOfCurrentUser() async {
+    try {
+      User? user = firebaseAuth.currentUser;
+      if (user != null) {
+        QuerySnapshot userDataSnapshot = await fireabseFireStore
+            .collection('users')
+            .where("id", isEqualTo: user.uid)
+            .get();
+        if (userDataSnapshot.docs.isNotEmpty) {
+          Map<String, dynamic> userData =
+          userDataSnapshot.docs.first.data() as Map<String, dynamic>;
+          myuser.User user=myuser.User.fromJson(userData);
+          prefs.saveString("userData", jsonEncode(user.toJson()));
+        } else {
+          await logout();
+        }
+      } else {
+        await logout();
+      }
+    } catch (e) {
+      throw Exception("Error fetching user data: $e");
+    }
+  }
+
+  Future<void> logout() async {
+    try {
+      await firebaseAuth.signOut();
+      prefs.clearAll();
+      Get.offAllNamed(RoutesNames.login);
+    } catch (e) {
+      throw Exception(e);
     }
   }
 }
