@@ -52,6 +52,21 @@ class HomeController extends GetxController {
     }
   }
 
+  Stream<List<Status>> getStatuss(){
+    try{
+      return firebaseFireStore.collection('status').snapshots().map((QuerySnapshot query){
+        List<Status> listStatus=[];
+        for(var e in query.docs){
+          listStatus.add(Status.fromJson(e.data() as Map<String,dynamic>));
+        }
+        listStatus.sort((a, b) => b.createAt!.compareTo(a.createAt!));
+        return listStatus;
+      });
+    }catch(e){
+      throw Exception(e);
+    }
+  }
+
   Future<String> getUserNameById(String? id) async {
     Map<String, dynamic> data = await firebaseFireStore
         .collection('users')

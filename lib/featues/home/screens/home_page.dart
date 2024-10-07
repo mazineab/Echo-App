@@ -62,22 +62,44 @@ class HomePage extends StatelessWidget {
                     child: const Text("Recent Status:",
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold))),
-                Expanded(
-                  child: controller.isEmptyList.value
-                      ? const Center(child: Text("No status yet"))
-                      : GetBuilder<HomeController>(builder: (_)=>
-                        ListView.builder(
-                            itemCount: controller.listStatus.length,
-                            itemBuilder: (context, index) {
-                              Status status = controller.listStatus[index];
-                              return CustomStatusWidget(
-                                profileUrl: status.profileUrl??'',
-                                fullName: status.fullUserName!,
-                                status: status,
-                              );
-                            }),
-                      ),
-                ),
+                // Expanded(
+                //   child: controller.isEmptyList.value
+                //       ? const Center(child: Text("No status yet"))
+                //       : GetBuilder<HomeController>(builder: (_)=>
+                //         ListView.builder(
+                //             itemCount: controller.listStatus.length,
+                //             itemBuilder: (context, index) {
+                //               Status status = controller.listStatus[index];
+                //               return CustomStatusWidget(
+                //                 profileUrl: status.profileUrl??'',
+                //                 fullName: status.fullUserName!,
+                //                 status: status,
+                //               );
+                //             }),
+                //       ),
+                // ),
+                Expanded(child: StreamBuilder(
+                    stream:controller.getStatuss(),
+                    builder: (context,snapshot){
+                      if(snapshot.connectionState==ConnectionState.waiting){
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return const Center(child: Text("No status yet"));
+                      }
+                      List<Status> listStatus=snapshot.data!;
+                      return ListView.builder(
+                          itemCount: listStatus.length,
+                          itemBuilder: (context,index){
+                            Status status = listStatus[index];
+                            return CustomStatusWidget(
+                              profileUrl: status.profileUrl ?? '',
+                              fullName: status.fullUserName!,
+                              status: status,
+                            );
+                      });
+                    }
+                ))
               ],
             );
           }),
