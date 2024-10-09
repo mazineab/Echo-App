@@ -16,80 +16,83 @@ import 'package:path/path.dart' as pth;
 import '../../../core/utils/localStorage/shared_pref_manager.dart';
 
 class SettingController extends GetxController {
-  final currentController=Get.find<CurrentUserController>();
-  final homeController=Get.find<HomeController>();
-  final drawerController=Get.find<CustomDrawerController>();
+  final currentController = Get.find<CurrentUserController>();
+  final homeController = Get.find<HomeController>();
+  final drawerController = Get.find<CustomDrawerController>();
   final ImagePickerService _imagePickerService = Get.put(ImagePickerService());
-  final PermissionService _permissionService=Get.put(PermissionService());
-  final FirebaseFirestore _firebaseFirestore=FirebaseFirestore.instance;
+  final PermissionService _permissionService = Get.put(PermissionService());
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   final SharedPredManager prefs = Get.find<SharedPredManager>();
-  final FirebaseStorage firebaseStorage = FirebaseStorage.instanceFor(
-      bucket: "gs://fir-appactions.appspot.com"
-  );
+  final FirebaseStorage firebaseStorage =
+      FirebaseStorage.instanceFor(bucket: "gs://fir-appactions.appspot.com");
 
   File? file;
   var url = ''.obs;
   var user = my_user.User.empty().obs;
+  var group = ''.obs;
 
   @override
-  onInit(){
+  onInit() {
     super.onInit();
     getCurrentUser();
+    group.value = user.value.sexe.name == "male" ? "Male" : "Female";
   }
 
   getCurrentUser() {
-    user.value =
-        my_user.User.fromJson(jsonDecode(prefs.getString('userData') ?? ''));
+    user.value = Get.find<CurrentUserController>().me.value;
   }
 
-  saveUserData(my_user.User updatedUser)async{
-    try{
-      await prefs.saveString('userData',jsonEncode(updatedUser.toJson()));
+  saveUserData(my_user.User updatedUser) async {
+    try {
+      await prefs.saveString('userData', jsonEncode(updatedUser.toJson()));
       currentController.getUserData();
       homeController.getUserData();
       drawerController.getUserData();
-    }catch(e){
+    } catch (e) {
       Exception(e);
     }
-
   }
-
 
   Future<void> chooseFromGallery() async {
-      bool permissionGranted = await _permissionService.requestGallery();
-      if (!permissionGranted) {
-        Get.snackbar("Permission Denied", "You need to grant the required permissions.");
-        return;
-      }
+    bool permissionGranted = await _permissionService.requestGallery();
+    if (!permissionGranted) {
+      Get.snackbar(
+          "Permission Denied", "You need to grant the required permissions.");
+      return;
+    }
 
-      var image = await _imagePickerService.chooseImageFromGallery();
-      if (image != null) {
-        try {
-          var imageName = pth.basename(image.path);
-          var refStorage = firebaseStorage.ref("profiles/$imageName");
-          await refStorage.putFile(image);
-          url.value = await refStorage.getDownloadURL();
-          user.value.imageUrl=url.value;
-          await saveUserData(user.value);
-          QuerySnapshot QrSnap= await _firebaseFirestore.collection('users').where('id',isEqualTo: user.value.id).get();
-          await QrSnap.docs.first.reference.update(user.value.toJson());
-          Get.snackbar("Upload Successful", "Image uploaded successfully!");
-        } catch (e) {
-          Get.snackbar("Upload Failed", "Failed to upload image: $e");
-          Exception(e);
-        }
+    var image = await _imagePickerService.chooseImageFromGallery();
+    if (image != null) {
+      try {
+        var imageName = pth.basename(image.path);
+        var refStorage = firebaseStorage.ref("profiles/$imageName");
+        await refStorage.putFile(image);
+        url.value = await refStorage.getDownloadURL();
+        user.value.imageUrl = url.value;
+        await saveUserData(user.value);
+        QuerySnapshot QrSnap = await _firebaseFirestore
+            .collection('users')
+            .where('id', isEqualTo: user.value.id)
+            .get();
+        await QrSnap.docs.first.reference.update(user.value.toJson());
+        Get.snackbar("Upload Successful", "Image uploaded successfully!");
+        update();
+      } catch (e) {
+        Get.snackbar("Upload Failed", "Failed to upload image: $e");
+        Exception(e);
       }
-    update();
+    }
+    
   }
-
 
   Future<void> chooseFromCamera() async {
     bool permissionGranted = await _permissionService.requestCamera();
     if (!permissionGranted) {
-      Get.snackbar("Permission Denied", "You need to grant the required permissions.");
+      Get.snackbar(
+          "Permission Denied", "You need to grant the required permissions.");
       return;
     }
-    try{
+    try {
       var image = await _imagePickerService.chooseImageFromCamera();
       if (image != null) {
         var imageName = pth.basename(image.path);
@@ -97,11 +100,10 @@ class SettingController extends GetxController {
         await refStorage.putFile(image);
         url.value = await refStorage.getDownloadURL();
       }
-    }catch(e){
+    } catch (e) {
       Exception(e);
     }
     update();
-
   }
 
   Future<void> dialogChoose() async {
