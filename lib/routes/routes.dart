@@ -15,6 +15,6 @@ class Routes{
         GetPage(name: RoutesNames.home, page:()=>HomePage(),binding: HomeBinding()),
         GetPage(name: RoutesNames.addStatus, page:()=>AddStatusScreen()),
         GetPage(name: RoutesNames.profile, page:()=>Profile()),
-        GetPage(name: RoutesNames.setting, page:()=>const Setting()),
+        GetPage(name: RoutesNames.setting, page:()=>Setting()),
     ];
 }

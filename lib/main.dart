@@ -3,11 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/core/utils/localStorage/shared_pref_manager.dart';
-import 'package:myapp/featues/home/controller/current_user_controller.dart';
-import 'package:myapp/featues/home/home_binding.dart';
 import 'package:myapp/routes/routes.dart';
 import 'package:myapp/routes/routes_names.dart';
-import 'common/drawer/custom_drawer_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

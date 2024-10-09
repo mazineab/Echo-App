@@ -15,7 +15,7 @@ import '../../routes/routes_names.dart';
 
 class CustomDrawerController extends GetxController {
   final SharedPredManager prefs = Get.find<SharedPredManager>();
-  final currentUserController=Get.find<CurrentUserController>();
+  final currentUserController = Get.find<CurrentUserController>();
   var drawerItem = DrawerItem.home.obs;
   var listItems = <CustomItem>[].obs;
   var user = my_user.User.empty().obs;
@@ -27,10 +27,10 @@ class CustomDrawerController extends GetxController {
   }
 
   getUserData() {
-    user.value=currentUserController.me.value;
+    user.value = currentUserController.me.value;
   }
 
-  setSelectedHome(){
+  setSelectedHome() {
     setSelectedScreen(DrawerItem.home);
     Get.offNamed(RoutesNames.home);
   }
@@ -73,7 +73,7 @@ class CustomDrawerController extends GetxController {
       CustomItem(
           title: "logout",
           iconData: Icons.logout,
-          onTap: () async{
+          onTap: () async {
             await Get.find<CurrentUserController>().logout();
             Get.delete<CustomDrawerController>();
             Get.offAllNamed(RoutesNames.login);
