@@ -7,7 +7,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:myapp/core/utils/localStorage/shared_pref_manager.dart';
 import 'package:myapp/data/models/enums.dart';
 import 'package:myapp/data/models/user.dart' as myuser;
-import 'package:myapp/featues/home/controller/current_user_controller.dart';
 import 'package:myapp/routes/routes_names.dart';
 
 class AuthController extends GetxController {

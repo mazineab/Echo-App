@@ -30,7 +30,7 @@ class AddStatusScreen extends StatelessWidget {
               height: MediaQuery.of(context).size.height * 0.02,
             ),
             Row(
-                children: [SizedBox(width: 10,),
+                children: [const SizedBox(width: 10,),
               ImageWidget(userName: controller.fullname.value,imageUrl: controller.profileUrl.value),
                   const SizedBox(width: 10),
                   Text(controller.fullname.value,style:const TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),

@@ -1,14 +1,10 @@
-import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/common/drawer/custom_item.dart';
 import 'package:myapp/common/drawer/drawer_item.dart';
 import 'package:myapp/data/models/user.dart' as my_user;
 import 'package:myapp/featues/home/controller/current_user_controller.dart';
-import 'package:myapp/featues/home/controller/home_controller.dart';
 
 import '../../core/utils/localStorage/shared_pref_manager.dart';
 import '../../routes/routes_names.dart';

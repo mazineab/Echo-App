@@ -7,7 +7,6 @@ import 'package:myapp/featues/home/controller/home_controller.dart';
 import 'package:myapp/featues/home/screens/profile.dart';
 import 'package:myapp/routes/routes_names.dart';
 
-import '../../../common/drawer/custom_drawer_controller.dart';
 import '../../../common/widgets/image_widget.dart';
 import '../../../data/models/status.dart';
 

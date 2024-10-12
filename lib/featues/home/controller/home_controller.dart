@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,7 +8,6 @@ import 'package:myapp/data/models/like.dart';
 import 'package:myapp/data/models/status.dart';
 import 'package:myapp/data/models/user.dart' as myuser;
 import 'package:myapp/featues/home/controller/current_user_controller.dart';
-import 'package:myapp/routes/routes_names.dart';
 
 import '../../../common/drawer/custom_drawer_controller.dart';
 import '../../../core/utils/localStorage/shared_pref_manager.dart';
