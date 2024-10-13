@@ -5,15 +5,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/common/dialogs/custom_snackbar.dart';
 import 'package:myapp/common/drawer/custom_drawer_controller.dart';
 import 'package:myapp/core/services/image_picker_service.dart';
 import 'package:myapp/core/services/permission_service.dart';
 import 'package:myapp/data/models/user.dart' as my_user;
 import 'package:myapp/featues/home/controller/current_user_controller.dart';
 import 'package:myapp/featues/home/controller/home_controller.dart';
+import 'package:myapp/routes/routes_names.dart';
 import 'package:path/path.dart' as pth;
 
 import '../../../core/utils/localStorage/shared_pref_manager.dart';
+import '../../../data/models/enums.dart';
 
 class SettingController extends GetxController {
   final currentController = Get.find<CurrentUserController>();
@@ -26,10 +29,18 @@ class SettingController extends GetxController {
   final FirebaseStorage firebaseStorage =
       FirebaseStorage.instanceFor(bucket: "gs://fir-appactions.appspot.com");
 
+  //controllers
+  final TextEditingController textControllerName = TextEditingController();
+  final TextEditingController textControllerLastName = TextEditingController();
+  final TextEditingController textControllerEmail = TextEditingController();
+  final TextEditingController textControllerPhone = TextEditingController();
+
   File? file;
   var url = ''.obs;
   var user = my_user.User.empty().obs;
   var group = ''.obs;
+  var isChange=false.obs;
+  var loading=false.obs;
 
   @override
   onInit() {
@@ -40,6 +51,23 @@ class SettingController extends GetxController {
 
   getCurrentUser() {
     user.value = Get.find<CurrentUserController>().me.value;
+  }
+
+  Future<void> saveChanges()async{
+    loading.value=true;
+    user.value.firstName=textControllerName.text;
+    user.value.lastName=textControllerLastName.text;
+    user.value.email=textControllerEmail.text;
+    user.value.phoneNumber=textControllerPhone.text;
+    user.value.sexe=group.value=='Female'?Sexe.female:Sexe.male;
+    try{
+      await _firebaseFirestore.collection('users').doc(user.value.uId).update(user.value.toJson());
+      CustomSnackbar.showSuccessSnackbar(Get.context!,"Succes Updating you data");
+    }catch(e){
+      CustomSnackbar.showErrorSnackbar(Get.context!,"Error updating your data try again please");
+    }finally{
+      loading.value=false;
+    }
   }
 
   saveUserData(my_user.User updatedUser) async {
@@ -132,4 +160,14 @@ class SettingController extends GetxController {
       },
     );
   }
+
+
+
+  //setting navigation
+
+  goPersonalInfo(){
+    Get.toNamed(RoutesNames.personalInfo);
+  }
 }
+
+
