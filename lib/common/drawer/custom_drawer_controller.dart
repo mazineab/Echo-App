@@ -71,8 +71,6 @@ class CustomDrawerController extends GetxController {
           iconData: Icons.logout,
           onTap: () async {
             await Get.find<CurrentUserController>().logout();
-            Get.delete<CustomDrawerController>();
-            Get.offAllNamed(RoutesNames.login);
           },
           itemDrawer: DrawerItem.logout)
     ]);

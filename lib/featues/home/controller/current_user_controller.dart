@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import '../../../common/drawer/custom_drawer_controller.dart';
 import '../../../core/utils/localStorage/shared_pref_manager.dart';
 import 'package:myapp/data/models/user.dart' as my_user;
 
@@ -22,6 +23,9 @@ class CurrentUserController extends GetxController{
     try {
       await firebaseAuth.signOut();
       prefs.clearAll();
+      Get.delete<CurrentUserController>();
+      Get.delete<CustomDrawerController>();
+      Get.delete<CurrentUserController>();
       Get.offAllNamed(RoutesNames.login);
     } catch (e) {
       throw Exception(e);
