@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:myapp/common/dialogs/custom_snackbar.dart';
 import 'package:myapp/core/utils/localStorage/shared_pref_manager.dart';
 import 'package:myapp/data/models/enums.dart';
 import 'package:myapp/data/models/user.dart' as myuser;
@@ -48,8 +49,7 @@ class AuthController extends GetxController {
         Get.offNamed(RoutesNames.home);
       }
     } catch (e) {
-      Get.snackbar('Error', 'Something went wrong',
-          backgroundColor: Colors.red);
+      CustomSnackbar.showErrorSnackbar(Get.context!,"Something went wrong");
     } finally {
       isload.value = false;
     }
@@ -68,27 +68,27 @@ class AuthController extends GetxController {
       UserCredential user = await firabaseAuth.createUserWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
       if (user.user != null) {
-        await fireabseFireStore.collection('users').add(myuser.User(
-              id: user.user!.uid,
-              firstName: firstNameController.text,
-              lastName: lastNameController.text,
-              email: emailController.text,
-              phoneNumber: phoneController.text,
-              sexe: sexeVal == "Male" ? Sexe.male : Sexe.male,
-              password: passwordController.text,
-            ).toJson());
+        Map<String,dynamic> data= {
+          'id':user.user?.uid??'',
+          'firstName': firstNameController.text,
+          'lastName': lastNameController.text,
+          'email': emailController.text,
+          'phoneNumber': phoneController.text,
+          'sexe': sexeVal == "Male" ?  "male" : "femel",
+          'password': passwordController.text,
+        };
+        myuser.User userReg = myuser.User.fromJson(data);
+        DocumentReference docRef =await fireabseFireStore.collection('users').add(userReg.toJson());
+        userReg.uId=docRef.id;
+        await docRef.update(userReg.toJson());
         for (var e in listControllers) {
           e.text = "";
         }
         sexeVal = null;
       }
-      // a.collection('roles').add({'name': 'user'});
-      Get.snackbar('Success', 'success create your account',
-          colorText: Colors.white, backgroundColor: Colors.green);
-      //navigation to home
+      CustomSnackbar.showSuccessSnackbar(Get.context!, 'success create your account');
     } catch (e) {
-      Get.snackbar('Error', 'Failed to create user',
-          colorText: Colors.white, backgroundColor: Colors.red);
+      CustomSnackbar.showErrorSnackbar(Get.context!, 'Failed to create user');
     } finally {
       isload.value = false;
     }

@@ -2,6 +2,7 @@ import 'package:myapp/data/models/enums.dart';
 
 class User {
   String id;
+  String? uId;
   String firstName;
   String lastName;
   String email;
@@ -21,11 +22,13 @@ class User {
     required this.phoneNumber,
     required this.password,
     this.bio,
-    this.imageUrl
+    this.imageUrl,
+    this.uId,
   });
 
   User.empty()
       : id = '',
+        uId='',
         firstName = '',
         lastName = '',
         email = '',
@@ -38,7 +41,8 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id'],
+      id: json['id']??'',
+      uId: json['uId']??'',
       firstName: json['firstName'],
       lastName: json['lastName'],
       email: json['email'],
@@ -53,6 +57,7 @@ class User {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'uId':uId??'',
       'firstName': firstName,
       'lastName': lastName,
       'email': email,
