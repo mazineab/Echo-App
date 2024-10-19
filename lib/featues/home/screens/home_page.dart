@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:myapp/common/dialogs/my_dialog.dart';
 import 'package:myapp/common/drawer/custom_drawer.dart';
 import 'package:myapp/common/widgets/custom_status_widget.dart';
+import 'package:myapp/featues/home/controller/add_status_controller.dart';
 import 'package:myapp/featues/home/controller/home_controller.dart';
 import 'package:myapp/featues/home/screens/profile.dart';
 import 'package:myapp/routes/routes_names.dart';
@@ -29,6 +30,7 @@ class HomePage extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.lightBlue,
           onPressed: () {
+            Get.put(AddStatusController());
             Get.toNamed(RoutesNames.addStatus);
           },
           child: const Icon(

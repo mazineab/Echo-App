@@ -3,19 +3,22 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/common/dialogs/custom_snackbar.dart';
 import 'package:myapp/core/utils/localStorage/shared_pref_manager.dart';
 import 'package:myapp/data/models/enums.dart';
 import 'package:myapp/data/models/tag.dart';
 import 'package:myapp/data/models/user.dart';
+import 'package:myapp/data/repositories/home_repo.dart';
 import 'package:myapp/featues/home/controller/home_controller.dart';
 
 import '../../../data/models/like.dart';
 
 class AddStatusController extends GetxController {
   final prefs = Get.find<SharedPredManager>();
-  final fireabseFireStore = FirebaseFirestore.instance;
+  final HomeRepo homeRepo=Get.put(HomeRepo());
   TextEditingController statusController = TextEditingController();
   var isload = false.obs;
+
 
   var fullname = "".obs;
   var profileUrl = "".obs;
@@ -142,28 +145,17 @@ class AddStatusController extends GetxController {
         'commentsCount': '',
         'fullUserName': fullname.value,
         'profileUrl':profileUrl.value,
-        // 'listComments': <Comment>[],
         'listLikes': <Like>[],
         'createAt': DateTime.now().toString()
       };
-      await fireabseFireStore
-          .collection('status')
-          .add(data)
-          .then((DocumentReference doc) {
-        fireabseFireStore
-            .collection('status')
-            .doc(doc.id)
-            .update({'id': doc.id}).then((_) async {
-          statusController.text = '';
-          listSelectedTags.clear();
-        });
-      });
-      Get.snackbar("Success ", "Success add status");
-      
-      Get.find<HomeController>().listStatus.clear();
-      Get.find<HomeController>().getStatus();
+      bool isAdd=await homeRepo.addStatus(data);
+      if(isAdd){
+        Get.find<HomeController>().listStatus.clear();
+        Get.find<HomeController>().getStatus();
+      }
+      CustomSnackbar.showSuccessSnackbar(Get.context!, "Success add status");
     } catch (e) {
-      Get.snackbar("Error ", "Faild to add this status");
+      CustomSnackbar.showErrorSnackbar(Get.context!, "Faild to add this status");
     } finally {
       isload.value = false;
     }

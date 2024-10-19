@@ -8,7 +8,7 @@ import '../../../common/drawer/custom_drawer_controller.dart';
 class AddStatusScreen extends StatelessWidget {
   AddStatusScreen({super.key});
 
-  final controller = Get.put(AddStatusController());
+  final controller = Get.find<AddStatusController>();
 
   @override
   Widget build(BuildContext context) {
