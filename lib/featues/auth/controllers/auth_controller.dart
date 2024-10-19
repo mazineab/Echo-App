@@ -7,15 +7,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:myapp/common/dialogs/custom_snackbar.dart';
 import 'package:myapp/core/utils/localStorage/shared_pref_manager.dart';
 import 'package:myapp/data/models/enums.dart';
-import 'package:myapp/data/models/user.dart' as myuser;
+import 'package:myapp/data/models/user.dart' as me;
+
+import 'package:myapp/data/repositories/auth_repo.dart';
 import 'package:myapp/routes/routes_names.dart';
 
 class AuthController extends GetxController {
-  final firabaseAuth = FirebaseAuth.instance;
-  final fireabseFireStore = FirebaseFirestore.instance;
   final prefs = Get.find<SharedPredManager>();
-  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   var isload = false.obs;
+
+  final authRepo=Get.put(AuthRepo());
 
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
@@ -31,20 +32,12 @@ class AuthController extends GetxController {
     update();
   }
 
-  @override
-  onInit() {
-    super.onInit();
-    emailController.text = "Mazine@gmail.com";
-    passwordController.text = "Mazine@123";
-  }
-
-  Future<void> login() async {
+  Future<void> login()async{
     isload.value = true;
-    Future.delayed(const Duration(seconds: 1));
+    Future.delayed(const Duration(milliseconds: 500));
     try {
-      UserCredential user = await firabaseAuth.signInWithEmailAndPassword(
-          email: emailController.text, password: passwordController.text);
-      if (user.user != null) {
+      bool islogin=await authRepo.login(emailController.text, passwordController.text);
+      if (islogin) {
         await getDataOfCurrentUser();
         Get.offNamed(RoutesNames.home);
       }
@@ -65,27 +58,21 @@ class AuthController extends GetxController {
       passwordController
     ];
     try {
-      UserCredential user = await firabaseAuth.createUserWithEmailAndPassword(
-          email: emailController.text, password: passwordController.text);
-      if (user.user != null) {
-        Map<String,dynamic> data= {
-          'id':user.user?.uid??'',
-          'firstName': firstNameController.text,
-          'lastName': lastNameController.text,
-          'email': emailController.text,
-          'phoneNumber': phoneController.text,
-          'sexe': sexeVal == "Male" ?  "male" : "femel",
-          'password': passwordController.text,
-        };
-        myuser.User userReg = myuser.User.fromJson(data);
-        DocumentReference docRef =await fireabseFireStore.collection('users').add(userReg.toJson());
-        userReg.uId=docRef.id;
-        await docRef.update(userReg.toJson());
-        for (var e in listControllers) {
-          e.text = "";
+      var userData={
+        'email':emailController.text,
+        'password':passwordController.text,
+        'firstName':firstNameController.text,
+        'lastName':lastNameController.text,
+        'phone':phoneController.text,
+        'sexe':sexeVal
+      };
+      bool isRegister=await authRepo.register(userData);
+      if(isRegister){
+          for (var e in listControllers) {
+            e.text = "";
+          }
+          sexeVal = null;
         }
-        sexeVal = null;
-      }
       CustomSnackbar.showSuccessSnackbar(Get.context!, 'success create your account');
     } catch (e) {
       CustomSnackbar.showErrorSnackbar(Get.context!, 'Failed to create user');
@@ -95,32 +82,23 @@ class AuthController extends GetxController {
   }
 
   getDataOfCurrentUser() async {
-    try {
-      User? user = firebaseAuth.currentUser;
-      if (user != null) {
-        QuerySnapshot userDataSnapshot = await fireabseFireStore
-            .collection('users')
-            .where("id", isEqualTo: user.uid)
-            .get();
-        if (userDataSnapshot.docs.isNotEmpty) {
-          Map<String, dynamic> userData =
-          userDataSnapshot.docs.first.data() as Map<String, dynamic>;
-          myuser.User user=myuser.User.fromJson(userData);
-          prefs.saveString("userData", jsonEncode(user.toJson()));
-        } else {
-          await logout();
-        }
-      } else {
+    try{
+      final me.User user=await authRepo.getDataOfCurrentUser()??me.User.empty();
+      if(user.id.isEmpty){
         await logout();
+      }else{
+        prefs.saveString("userData", jsonEncode(user.toJson()));
       }
-    } catch (e) {
-      throw Exception("Error fetching user data: $e");
+
+    }catch(e){
+      CustomSnackbar.showErrorSnackbar(Get.context!, "Error:$e");
+      await logout();
     }
   }
 
   Future<void> logout() async {
     try {
-      await firebaseAuth.signOut();
+      authRepo.logout();
       prefs.clearAll();
       Get.offAllNamed(RoutesNames.login);
     } catch (e) {

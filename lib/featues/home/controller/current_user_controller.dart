@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:myapp/data/repositories/auth_repo.dart';
 import '../../../common/drawer/custom_drawer_controller.dart';
 import '../../../core/utils/localStorage/shared_pref_manager.dart';
 import 'package:myapp/data/models/user.dart' as my_user;
@@ -10,7 +11,7 @@ import '../../../routes/routes_names.dart';
 class CurrentUserController extends GetxController{
   final SharedPredManager prefs = Get.find<SharedPredManager>();
   var me=my_user.User.empty().obs;
-  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  final AuthRepo authRepo=Get.put(AuthRepo());
 
   getUserData() {
     String? userData = prefs.getString("userData");
@@ -21,7 +22,7 @@ class CurrentUserController extends GetxController{
 
   Future<void> logout() async {
     try {
-      await firebaseAuth.signOut();
+      await authRepo.logout();
       prefs.clearAll();
       Get.delete<CurrentUserController>();
       Get.delete<CustomDrawerController>();
