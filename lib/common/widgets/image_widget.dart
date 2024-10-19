@@ -6,13 +6,14 @@ import 'package:flutter/material.dart';
 class ImageWidget extends StatelessWidget {
   String? userName;
   String? imageUrl;
-  ImageWidget({super.key,this.userName,this.imageUrl});
+  double? width,height;
+  ImageWidget({super.key,this.userName,this.imageUrl,this.width,this.height});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 50,
-      height: 50,
+      width:width?? 50,
+      height:height?? 50,
       child: Avatar(
         name: userName,
         sources: [if(imageUrl!=null && imageUrl!.isNotEmpty) NetworkSource(imageUrl!)],

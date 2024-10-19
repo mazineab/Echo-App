@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/common/widgets/custom_status_widget.dart';
+import 'package:myapp/common/widgets/image_widget.dart';
 import 'package:myapp/featues/home/controller/profile_controller.dart';
 import '../../../common/drawer/custom_drawer.dart';
 import '../../../common/drawer/custom_drawer_controller.dart';
@@ -14,15 +15,6 @@ class Profile extends StatelessWidget {
   // late final ProfileController controller;
   @override
   Widget build(BuildContext context) {
-    // if (isMyProfile) {
-    //   controller = Get.put(ProfileController());
-    //   print("HIII MY Profile");
-    // } else {
-    //   controller = Get.put(ProfileController());
-    //   controller.userId.value = userId!;
-    //   print("HIII IS NOT MY Profile");
-    //   controller.onReady();
-    // }
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
@@ -46,7 +38,7 @@ class Profile extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 20,top: 10),
-                child: CustomDrawer().buildHeader(isDrawer: false),
+                child:ImageWidget(width: 100,height: 100,imageUrl:controller.user.value.imageUrl??'',userName: controller.user.value.getFullName(),),
               ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -120,8 +112,8 @@ class Profile extends StatelessWidget {
                       itemCount: controller.listStatus.length,
                       itemBuilder: (context, index) {
                         return CustomStatusWidget(
-                            fullName:
-                                controller.listStatus[index].fullUserName ?? '',
+                            profileUrl: controller.listStatus[index].profileUrl??'',
+                            fullName:controller.listStatus[index].fullUserName ?? '',
                             status: controller.listStatus[index]);
                       }),
                 ),

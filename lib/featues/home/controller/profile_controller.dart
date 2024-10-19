@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/common/dialogs/custom_snackbar.dart';
 import 'package:myapp/core/utils/localStorage/shared_pref_manager.dart';
 import 'package:myapp/data/models/status.dart';
 import 'package:myapp/data/models/user.dart' as myuser;
+import 'package:myapp/data/repositories/home_repo.dart';
 
 class ProfileController extends GetxController
     with GetTickerProviderStateMixin {
@@ -18,19 +20,16 @@ class ProfileController extends GetxController
   var isLoading = true.obs;
   var userId = ''.obs;
 
+  //
+  final HomeRepo homeRepo = Get.put(HomeRepo());
+
   getCurrentUser() {
-    user.value =
-        myuser.User.fromJson(jsonDecode(prefs.getString('userData') ?? ''));
+    user.value = myuser.User.fromJson(jsonDecode(prefs.getString('userData') ?? ''));
   }
 
   getUserStatus(String userIdd) async {
     try {
-      CollectionReference docRef = firestore.collection('status');
-      QuerySnapshot querySnapshot =
-          await docRef.where('userId', isEqualTo: userIdd).get();
-      for (var i in querySnapshot.docs) {
-        listStatus.add(Status.fromJson(i.data() as Map<String, dynamic>));
-      }
+      listStatus.value = await homeRepo.getStatusOfUser(userIdd);
       if (listStatus.isEmpty) {
         isEmptyList.value = true;
       } else {
@@ -38,26 +37,22 @@ class ProfileController extends GetxController
       }
       isLoading.value = false;
     } catch (e) {
-      Exception(e);
+      CustomSnackbar.showErrorSnackbar(Get.context!, "Error Fetch Status");
+    } finally {
+      update();
     }
-    update();
   }
 
   getUserDetails() async {
     try {
-      CollectionReference docRef = firestore.collection('users');
-      QuerySnapshot querySnapshot =
-          await docRef.where('id', isEqualTo: userId.value).get();
-      DocumentSnapshot docSnapshot = querySnapshot.docs[0];
-
-      if (docSnapshot.exists) {
-        user.value =
-            myuser.User.fromJson(docSnapshot.data() as Map<String, dynamic>);
-      }
+      Map<String,dynamic> userData=await homeRepo.getUserDataById(userId.value);
+      user.value=myuser.User.fromJson(userData);
     } catch (e) {
-      Exception(e);
+      CustomSnackbar.showErrorSnackbar(
+          Get.context!, "Error Fetch Data Of This User");
+    } finally {
+      update();
     }
-    update();
   }
 
   @override
