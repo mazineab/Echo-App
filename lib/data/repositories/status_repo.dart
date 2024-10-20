@@ -1,0 +1,125 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:myapp/data/models/status.dart';
+import 'package:myapp/data/models/user.dart' as myuser;
+
+import '../models/comment.dart';
+import '../models/like.dart';
+
+class StatusRepo {
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+
+  Future<List<Status>> getStatus() async {
+    List<Status> listStatus = [];
+    try {
+      CollectionReference status = _firebaseFirestore.collection('status');
+      QuerySnapshot querySnapshot = await status.get();
+      for (var e in querySnapshot.docs) {
+        listStatus.add(Status.fromJson(e.data() as Map<String, dynamic>));
+      }
+      return listStatus;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Stream<List<Status>> getStatuss() {
+    try {
+      return _firebaseFirestore.collection('status').snapshots().map((
+          QuerySnapshot query) {
+        List<Status> listStatus = [];
+        for (var e in query.docs) {
+          listStatus.add(Status.fromJson(e.data() as Map<String, dynamic>));
+        }
+        listStatus.sort((a, b) => b.createAt!.compareTo(a.createAt!));
+        return listStatus;
+      });
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<String> getUserNameById(String? id) async {
+    try {
+      Map<String, dynamic> data = await _firebaseFirestore
+          .collection('users')
+          .where('id', isEqualTo: id)
+          .get() as Map<String, dynamic>;
+      String name = myuser.User
+          .fromJson(data)
+          .firstName;
+      String lastName = myuser.User
+          .fromJson(data)
+          .lastName;
+      return "$name $lastName";
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<String?> getProfileOf(String uid) async {
+    try {
+      QuerySnapshot querySnapshot = await _firebaseFirestore.collection('users')
+          .where('id', isEqualTo: uid)
+          .get();
+      if (querySnapshot.docs.isNotEmpty) {
+        DocumentSnapshot docSnp = querySnapshot.docs.first;
+        String? profileUrl = docSnp['imageUrl'];
+        return profileUrl;
+      }
+      return '';
+    } catch (e) {
+      return '';
+    }
+  }
+
+  Future<List<Comment>> getComments(Status status) async {
+    try {
+      QuerySnapshot querySnp = await _firebaseFirestore
+          .collection('status')
+          .doc(status.id)
+          .collection('comments')
+          .get();
+      List<dynamic> comments = querySnp.docs
+          .map((doc) => Comment.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+      return comments as List<Comment>;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<bool> commentUpdate(Status status, Comment comment) async {
+    try {
+      DocumentReference docRef =
+      _firebaseFirestore.collection('status').doc(status.id!);
+      docRef
+          .collection('comments')
+          .add(comment.toJson())
+          .then((DocumentReference doc) {
+        _firebaseFirestore.collection('status').doc(status.id!);
+        docRef.collection('comments').doc(doc.id).update({'id': doc.id});
+
+        var commentCollection = _firebaseFirestore
+            .collection('status')
+            .doc(status.id!)
+            .collection('comments');
+
+        commentCollection.get().then((querySnp) {
+          int lenght = querySnp.size;
+          _firebaseFirestore
+              .collection('status')
+              .doc(status.id!)
+              .update({'commentsCount': '$lenght'});
+        });
+      });
+      if (status.listComments!.isEmpty) {
+        status.listComments!.add(comment);
+      }
+      return true;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+}
+

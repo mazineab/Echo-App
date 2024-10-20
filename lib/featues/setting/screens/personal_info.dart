@@ -56,6 +56,11 @@ class PersonalInfo extends StatelessWidget {
                   const SizedBox(height: 15),
                   buildFieldInformation("Phone Number", controller.user.value.phoneNumber,controller.textControllerPhone),
                   const SizedBox(height: 10),
+                  Container(
+                    padding: const EdgeInsets.only(left: 30),
+                    width: double.infinity,
+                      child: const Text("Gender",textAlign: TextAlign.start,)
+                  ),const SizedBox(height: 5),
                   Obx(
                         () => buildGenderRadios(controller.group.value, (String value) {
                           if(value!=controller.group.value){
@@ -134,7 +139,7 @@ class PersonalInfo extends StatelessWidget {
             Container(
               height: 45,
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
               decoration: BoxDecoration(
                 border: Border.all(color: const Color.fromARGB(91, 158, 158, 158)),
                 borderRadius: BorderRadius.circular(5),
@@ -162,11 +167,10 @@ class PersonalInfo extends StatelessWidget {
 
   Widget buildGenderRadios(String groupValue, Function(String) onChanged) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 30),
+      margin: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Gender"),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -188,7 +192,7 @@ class PersonalInfo extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 15),
+              const SizedBox(width: 5),
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
