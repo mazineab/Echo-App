@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/Constants/colors.dart';
 import 'package:myapp/common/widgets/image_widget.dart';
+import 'package:myapp/featues/auth/controllers/auth_controller.dart';
 
 import '../../../common/drawer/custom_drawer.dart';
 import '../../../common/drawer/custom_drawer_controller.dart';
@@ -26,10 +27,13 @@ class Setting extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              buildProfileWidget(),
+              buildProfileWidget(),SizedBox(height: 20),
               buildTitle("Account Setting"),
               buildListTile("Personal Information", Icons.person_outline,onTap: controller.goPersonalInfo),
-              buildListTile("Password changing", Icons.security_outlined),
+              buildListTile("Password changing", Icons.security_outlined,onTap: ()async{
+                await Get.put(AuthController()).resetPassword();
+                Get.delete<AuthController>();
+              }),
               buildListTile("Notifications Preferences", Icons.notifications_outlined),
               buildTitle("Community Setting"),
               buildListTile("Comment List", Icons.comment_outlined),
@@ -72,20 +76,20 @@ class Setting extends StatelessWidget {
       padding: const EdgeInsets.only(left: 20),
       child: Text(title,
           style: const TextStyle(
-              fontSize: 19,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.grey
+              color: Colors.black
           )),
     );
   }
 
   Widget buildListTile(String value,IconData iconPrefix,{VoidCallback? onTap}){
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.only(right: 15,left: 15),
       child: ListTile(
         onTap: onTap,
-        leading: Icon(iconPrefix),
-        title: Text(value,style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+        leading: Icon(iconPrefix,color: MyColors.colorbl,),
+        title: Text(value,style: TextStyle(color: Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500)),
         trailing: Icon(Icons.chevron_right_sharp,color: MyColors.colorbl,),
       ),
     );

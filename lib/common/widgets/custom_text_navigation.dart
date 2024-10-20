@@ -20,7 +20,7 @@ class CustomTextNavigation extends StatelessWidget {
           TextButton(
               onPressed:onTap,
               child: Text(
-                secondText
+                secondText,style: const TextStyle(color: Colors.blueAccent),
               ))
         ],
       ),

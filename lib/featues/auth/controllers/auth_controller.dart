@@ -16,7 +16,7 @@ class AuthController extends GetxController {
   final prefs = Get.find<SharedPredManager>();
   var isload = false.obs;
 
-  final authRepo=Get.put(AuthRepo());
+  final authRepo = Get.put(AuthRepo());
 
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
@@ -32,17 +32,18 @@ class AuthController extends GetxController {
     update();
   }
 
-  Future<void> login()async{
+  Future<void> login() async {
     isload.value = true;
     Future.delayed(const Duration(milliseconds: 500));
     try {
-      bool islogin=await authRepo.login(emailController.text, passwordController.text);
+      bool islogin =
+          await authRepo.login(emailController.text, passwordController.text);
       if (islogin) {
         await getDataOfCurrentUser();
         Get.offNamed(RoutesNames.home);
       }
     } catch (e) {
-      CustomSnackbar.showErrorSnackbar(Get.context!,"Something went wrong");
+      CustomSnackbar.showErrorSnackbar(Get.context!, "Something went wrong");
     } finally {
       isload.value = false;
     }
@@ -58,22 +59,23 @@ class AuthController extends GetxController {
       passwordController
     ];
     try {
-      var userData={
-        'email':emailController.text,
-        'password':passwordController.text,
-        'firstName':firstNameController.text,
-        'lastName':lastNameController.text,
-        'phone':phoneController.text,
-        'sexe':sexeVal
+      var userData = {
+        'email': emailController.text,
+        'password': passwordController.text,
+        'firstName': firstNameController.text,
+        'lastName': lastNameController.text,
+        'phone': phoneController.text,
+        'sexe': sexeVal
       };
-      bool isRegister=await authRepo.register(userData);
-      if(isRegister){
-          for (var e in listControllers) {
-            e.text = "";
-          }
-          sexeVal = null;
+      bool isRegister = await authRepo.register(userData);
+      if (isRegister) {
+        for (var e in listControllers) {
+          e.text = "";
         }
-      CustomSnackbar.showSuccessSnackbar(Get.context!, 'success create your account');
+        sexeVal = null;
+      }
+      CustomSnackbar.showSuccessSnackbar(
+          Get.context!, 'success create your account');
     } catch (e) {
       CustomSnackbar.showErrorSnackbar(Get.context!, 'Failed to create user');
     } finally {
@@ -82,15 +84,15 @@ class AuthController extends GetxController {
   }
 
   getDataOfCurrentUser() async {
-    try{
-      final me.User user=await authRepo.getDataOfCurrentUser()??me.User.empty();
-      if(user.id.isEmpty){
+    try {
+      final me.User user =
+          await authRepo.getDataOfCurrentUser() ?? me.User.empty();
+      if (user.id.isEmpty) {
         await logout();
-      }else{
+      } else {
         prefs.saveString("userData", jsonEncode(user.toJson()));
       }
-
-    }catch(e){
+    } catch (e) {
       CustomSnackbar.showErrorSnackbar(Get.context!, "Error:$e");
       await logout();
     }
@@ -104,5 +106,68 @@ class AuthController extends GetxController {
     } catch (e) {
       throw Exception(e);
     }
+  }
+
+  Future<void> resetPassword() async {
+    try {
+      await resetDialog();
+    } catch (e) {
+      CustomSnackbar.showErrorSnackbar(Get.context!, "$e");
+    }
+  }
+
+  resetDialog() async {
+    TextEditingController emailReset = TextEditingController();
+    showDialog(
+        context: Get.context!,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Reset Password'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                    'Enter your email to receive a reset password link:'),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: emailReset,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+            actions: [
+              ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor:
+                        const WidgetStatePropertyAll(Colors.lightBlue),
+                    foregroundColor: const WidgetStatePropertyAll(Colors.white),
+                    shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)))),
+                onPressed: () async {
+                  try {
+                    await authRepo.resetPassword(emailReset.text);
+                    CustomSnackbar.showSuccessSnackbar(
+                        Get.context!, "Link sent successfully.");
+                    Get.back();
+                  } catch (e) {
+                    CustomSnackbar.showErrorSnackbar(Get.context!, "Error $e");
+                  }
+                },
+                child: const Text('Send'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child:const Text('Cancel',style: TextStyle(color: Colors.blueAccent),),
+              ),
+            ],
+          );
+        });
   }
 }

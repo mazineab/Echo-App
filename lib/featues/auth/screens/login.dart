@@ -36,12 +36,26 @@ class Login extends StatelessWidget {
                     label: "Password",
                     controller: controller.passwordController,
                     isPassword: true),
+                const SizedBox(height: 5),
+                GestureDetector(
+                  onTap: () async{
+                    await controller.resetPassword();
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 200),
+                      child: Text(
+                        style: TextStyle(color: Colors.lightBlue.withOpacity(0.8),fontWeight: FontWeight.bold),
+                    "Forget Password",
+                  )),
+                ),
                 const SizedBox(height: 32.0),
-                Obx(()=>
-                   CustomButton(
-                      child:controller.isload.value
-                      ? const CircularProgressIndicator(color: Colors.white,)
-                       : const Text('Login'),
+                Obx(
+                  () => CustomButton(
+                      child: controller.isload.value
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : const Text('Login'),
                       onTap: () {
                         controller.login();
                       }),
