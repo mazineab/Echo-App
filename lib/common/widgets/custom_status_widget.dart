@@ -13,7 +13,11 @@ class CustomStatusWidget extends StatelessWidget {
   final String fullName;
   final Status status;
   final String? profileUrl;
-  CustomStatusWidget({super.key, required this.fullName, required this.status,this.profileUrl});
+  CustomStatusWidget(
+      {super.key,
+      required this.fullName,
+      required this.status,
+      this.profileUrl});
 
   final controller = Get.find<HomeController>();
   var lenghtOf = 0.obs;
@@ -27,34 +31,35 @@ class CustomStatusWidget extends StatelessWidget {
     return Column(
       children: [
         CustomListTile(
-          profileUrl: profileUrl??'',
-          id: status.userId,
+          profileUrl: profileUrl ?? '',
+          userId: status.userId,
           title: fullName,
           subtitle: status.content,
-          isComment: true,
+          isComment: false,
+          uid: status.id,
         ),
         Container(
           margin: const EdgeInsets.only(left: 85),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Text(
-              //   status.content,
-              //   style: const TextStyle(fontSize: 17),
-              // ),
               const SizedBox(height: 5),
-              Row(
-                children: [
-                  buildDate(status),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  buildIconLikeText(status),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  buildIconCommentText(status),
-                ],
+              SizedBox(
+                width: MediaQuery.of(context).size.height - 20,
+                child: Row(
+                  children: [
+                    Expanded(
+                        child: Row(
+                      children: [
+                        Expanded(child: buildIconLikeText(status)),
+                        Expanded(child: buildIconCommentText(status)),
+                      ],
+                    )),
+                    Expanded(
+                      child: buildDate(status),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 1,
@@ -72,11 +77,15 @@ class CustomStatusWidget extends StatelessWidget {
   Widget buildDate(Status status) {
     return Row(
       children: [
-        Icon(Icons.calendar_month, color: Colors.grey.shade400),
+        Icon(
+          Icons.calendar_month,
+          color: Colors.grey.shade400,
+          size: 20,
+        ),
         Text(
           status.formattedCreatedAt(),
           style: const TextStyle(
-              fontSize: 15, color: Color.fromARGB(255, 0, 0, 0)),
+              fontSize: 13, color: Color.fromARGB(255, 0, 0, 0)),
         ),
       ],
     );

@@ -47,7 +47,7 @@ class CustomDrawerController extends GetxController {
           iconData: Icons.person,
           onTap: () {
             setSelectedScreen(DrawerItem.profile);
-            Get.toNamed(RoutesNames.profile);
+            Get.toNamed(RoutesNames.profile,arguments: user.value.id);
           },
           itemDrawer: DrawerItem.profile),
       CustomItem(
