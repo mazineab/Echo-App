@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/common/dialogs/custom_snackbar.dart';
+import 'package:myapp/common/widgets/bottom_sheet/bottom_sheet_controller.dart';
 import 'package:myapp/data/models/comment.dart';
 import 'package:myapp/data/models/like.dart';
 import 'package:myapp/data/models/status.dart';
@@ -135,33 +136,14 @@ class HomeController extends GetxController {
     return await _statusRepo.getProfileOf(uid);
   }
 
-  var textCommentController = TextEditingController();
-  commentUpdate(Status status) async {
-    try {
-      Comment comment = Comment(
-          id: '',
-          userId: myId.value,
-          content: textCommentController.text,
-          userFullName: fullName.value,
-          profileUrl: imageUrl.value,
-          createAt: DateTime.now().toString(),
-          statusId: status.id!);
-      bool isUpdate=await _statusRepo.commentUpdate(status, comment);
-      if(isUpdate){
-        await getCommants(status);
-        update();
-      }else{
-        CustomSnackbar.showErrorSnackbar(Get.context!,"Faild add your comment");
-      }
-    } catch (e) {
-      CustomSnackbar.showErrorSnackbar(Get.context!,"Faild add your comment");
-      throw Exception(e);
-    }
-  }
+
 
   getCommants(Status status) async {
     try {
-      List<Comment> listCmnt=await _statusRepo.getComments(status);
+      List<Comment> listCmnt=await _statusRepo.getComments(statusId: status.id??'');
+      if(Get.isRegistered<BottomSheetController>()){
+        Get.find<BottomSheetController>().setListComment(listCmnt);
+      }
       status.listComments!.assignAll(listCmnt);
       status.listComments!.sort((a, b) =>
           DateTime.parse(b.createAt!).compareTo(DateTime.parse(a.createAt!)));

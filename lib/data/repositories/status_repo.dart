@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:myapp/common/dialogs/ask_dialog.dart';
 import 'package:myapp/common/dialogs/custom_snackbar.dart';
+import 'package:myapp/common/widgets/bottom_sheet/bottom_sheet_controller.dart';
 import 'package:myapp/data/models/status.dart';
 import 'package:myapp/data/models/user.dart' as myuser;
 
@@ -75,11 +76,11 @@ class StatusRepo {
     }
   }
 
-  Future<List<Comment>> getComments(Status status) async {
+  Future<List<Comment>> getComments({required String statusId}) async {
     try {
       QuerySnapshot querySnp = await _firebaseFirestore
           .collection('status')
-          .doc(status.id)
+          .doc(statusId)
           .collection('comments')
           .get();
       List<dynamic> comments = querySnp.docs
@@ -130,6 +131,30 @@ class StatusRepo {
       CustomSnackbar.showSuccessSnackbar(Get.context!,"status deleted success");
     }catch(e){
       CustomSnackbar.showErrorSnackbar(Get.context!,"Faild to delete this status");
+    }
+  }
+
+  Future<void> deleteComment({required String statusId, required String commentId})async{
+    try{
+      CollectionReference collectionComment= _firebaseFirestore.collection('status').doc(statusId).collection('comments');
+      await collectionComment.doc(commentId).delete();
+      //update list
+      List<Comment> listComment=await getComments(statusId: statusId);
+      Get.find<BottomSheetController>().setListComment(listComment);
+
+
+      //update count
+      final snapshot=await collectionComment.count().get();
+      int res=snapshot.count??0;
+      var doc=_firebaseFirestore.collection('status').doc(statusId);
+      DocumentSnapshot docSnp=await doc.get();
+      Map<String,dynamic>? data=docSnp.data() as Map<String,dynamic>;
+      data['commentsCount']=res.toString();
+      await doc.update(data);
+
+      CustomSnackbar.showSuccessSnackbar(Get.context!,"Comment deleted success");
+    }catch(e){
+      CustomSnackbar.showErrorSnackbar(Get.context!,"Faild to delete this comment");
     }
   }
 

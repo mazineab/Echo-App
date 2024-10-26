@@ -1,53 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class CustomSnackbar {
-  /// Show an error snackbar with a red background and an error icon
-  static void showErrorSnackbar(BuildContext context, String message) {
-    final snackBar = SnackBar(
-      content: Row(
-        children: [
-          const Icon(Icons.error, color: Colors.white),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              message,
-              style: const TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
-      ),
-      backgroundColor: Colors.redAccent,
-      behavior: SnackBarBehavior.floating,
+  static void showSuccessSnackbar(BuildContext context, String message) {
+    Get.snackbar(
+      'Success',
+      message,
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: Colors.green,
+      colorText: Colors.white,
+      borderRadius: 10,
       margin: const EdgeInsets.all(10),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
+      icon: const Icon(Icons.check_circle, color: Colors.white),
+      shouldIconPulse: false,
+      duration: const Duration(seconds: 3),
     );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  /// Show a success snackbar with a green background and a check icon
-  static void showSuccessSnackbar(BuildContext context, String message) {
-    final snackBar = SnackBar(
-      content: Row(
-        children: [
-          const Icon(Icons.check_circle, color: Colors.white),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              message,
-              style: const TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
-      ),
-      backgroundColor: Colors.green,
-      behavior: SnackBarBehavior.floating,
+  static void showErrorSnackbar(BuildContext context,String message) {
+    Get.snackbar(
+      'Error',
+      message,
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: Colors.redAccent,
+      colorText: Colors.white,
+      borderRadius: 10,
       margin: const EdgeInsets.all(10),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
+      icon: const Icon(Icons.error, color: Colors.white),
+      shouldIconPulse: false,
+      duration: const Duration(seconds: 3),
     );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
+
 }

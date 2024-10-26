@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:myapp/common/widgets/bottom_sheet/bottom_sheet_controller.dart';
 import 'package:myapp/common/widgets/bottom_sheet/custom_bottom_sheet.dart';
 import 'package:myapp/common/widgets/custom_list_tile.dart';
 import 'package:myapp/data/models/like.dart';
@@ -143,6 +144,9 @@ class CustomStatusWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         await controller.getCommants(status);
+        BottomSheetController controllerB = Get.put(BottomSheetController());
+        controllerB.setListComment(status.listComments!);
+
         showModalBottomSheet(
             isScrollControlled: true,
             context: Get.context!,

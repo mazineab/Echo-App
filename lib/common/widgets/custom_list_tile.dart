@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/common/dialogs/ask_dialog.dart';
 import 'package:myapp/common/widgets/image_widget.dart';
+import 'package:myapp/data/models/status.dart';
 import 'package:myapp/data/repositories/status_repo.dart';
 import 'package:myapp/featues/home/controller/current_user_controller.dart';
+import 'package:myapp/featues/home/controller/home_controller.dart';
 import 'package:myapp/featues/home/screens/profile.dart';
 
 class CustomListTile extends StatelessWidget {
@@ -13,6 +15,7 @@ class CustomListTile extends StatelessWidget {
   final String userId;
   String? uid;
   String? profileUrl;
+  String? statusId;//this add just when this widget used by comment
   CustomListTile(
       {super.key,
       required this.title,
@@ -20,6 +23,7 @@ class CustomListTile extends StatelessWidget {
       required this.userId,
       this.profileUrl,
       this.uid,
+        this.statusId,
       this.isComment = false});
 
   @override
@@ -63,13 +67,16 @@ class CustomListTile extends StatelessWidget {
     return PopupMenuButton(
       onSelected: (e)async{
         if(e=="delete" && !isComment && uid!=null){
-          AskDialog.showDeleteConfirmationDialog(Get.context!,uid!,userId);
+          AskDialog.showDeleteConfirmationDialog(Get.context!,statusId:uid!,userId:userId);
+        }
+        if(e=="delete" && isComment && uid!=null){
+          AskDialog.showDeleteConfirmationDialog(Get.context!,statusId: statusId!,commentId: uid,userId: userId,isStatus: false);
         }
       },
         itemBuilder: (context){
           return [
-            PopupMenuItem(value: "delete",child: Text("Delete")),
-            PopupMenuItem(value: "edit",child: Text("Edit"))
+             const PopupMenuItem(value: "delete",child: Text("Delete")),
+             const PopupMenuItem(value: "edit",child: Text("Edit"))
           ];
         }
     );

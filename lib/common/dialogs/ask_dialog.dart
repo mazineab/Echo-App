@@ -7,7 +7,9 @@ import 'package:myapp/featues/setting/controller/status_comment_controller.dart'
 
 class AskDialog{
 
-  static void showDeleteConfirmationDialog(BuildContext context,String statusId,String userId) {
+  static void showDeleteConfirmationDialog(BuildContext context,
+      {required String statusId,required String userId,String? commentId,
+      bool isStatus = true}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -34,10 +36,12 @@ class AskDialog{
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  "Do you really want to delete this status? This process cannot be undone.",
+                 Text(
+                  isStatus
+                      ?"Do you really want to delete this status? This process cannot be undone."
+                      :"Do you really want to delete this comment? This process cannot be undone.",
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     color: Colors.black54,
                   ),
@@ -68,13 +72,17 @@ class AskDialog{
                     ElevatedButton(
                       onPressed: ()async {
                         try{
-                          await Get.find<StatusRepo>().deleteStatus(statusId);
-                          if (Get.isRegistered<ProfileController>()) {
-                            Get.find<ProfileController>().getUserStatus(userId);
-                            Get.find<ProfileController>().getCountOfStatus();
-                          }
-                          if (Get.isRegistered<StatusCommentController>()) {
-                            Get.find<StatusCommentController>().fetchStatus();
+                          if(isStatus){
+                            await Get.find<StatusRepo>().deleteStatus(statusId);
+                            if (Get.isRegistered<ProfileController>()) {
+                              Get.find<ProfileController>().getUserStatus(userId);
+                              Get.find<ProfileController>().getCountOfStatus();
+                            }
+                            if (Get.isRegistered<StatusCommentController>()) {
+                              Get.find<StatusCommentController>().fetchStatus();
+                            }
+                          }else{
+                            await Get.find<StatusRepo>().deleteComment(statusId: statusId,commentId: commentId!);
                           }
                           Navigator.of(context).pop();
                         }catch(e){

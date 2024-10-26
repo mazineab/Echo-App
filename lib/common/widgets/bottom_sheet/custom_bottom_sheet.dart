@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/common/widgets/bottom_sheet/bottom_sheet_controller.dart';
 import 'package:myapp/common/widgets/custom_list_tile.dart';
 import 'package:myapp/featues/home/controller/home_controller.dart';
 import '../../../data/models/status.dart';
@@ -10,15 +11,15 @@ class CustomBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<HomeController>();
+    final controller = Get.find<BottomSheetController>();
     return SizedBox(
-      height: MediaQuery.of(context).size.height / 2, // Fixed height of 400
+      height: MediaQuery.of(context).size.height / 2,
       child: Column(
         children: [
           Expanded(
-            child: GetBuilder<HomeController>(builder: (_) {
-              return 
-              status.listComments!.isEmpty
+            child: GetBuilder<BottomSheetController>(
+                builder:(_) {
+              return controller.listComments.isEmpty
                 ? const Center(
                     child: Text(
                       'No comments yet',
@@ -28,16 +29,18 @@ class CustomBottomSheet extends StatelessWidget {
                 : Padding(
                       padding: const EdgeInsets.only(bottom: 20.0, top: 20),
                       child: ListView.builder(
-                        itemCount: status.listComments!.length,
+                        itemCount: controller.listComments.length,
                         itemBuilder: (context, index) {
                         return Container(
                           margin: const EdgeInsets.symmetric(vertical: 10),
                           child: CustomListTile(
                               isComment: true,
-                              profileUrl: status.listComments![index].profileUrl,
-                              title: status.listComments![index].userFullName ??'',
-                              subtitle: status.listComments![index].content,
-                              userId:status.listComments![index].userId ,
+                              profileUrl: controller.listComments[index].profileUrl,
+                              title: controller.listComments[index].userFullName ??'',
+                              subtitle: controller.listComments[index].content,
+                              userId:controller.listComments[index].userId ,
+                              uid:controller.listComments[index].id ,
+                              statusId: controller.listComments[index].statusId,
                             ),
                           );
                         },
