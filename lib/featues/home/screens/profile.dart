@@ -10,11 +10,12 @@ import '../../../data/models/enums.dart';
 // ignore: must_be_immutable
 class Profile extends StatelessWidget {
   bool isMyProfile;
-  final String? userId;
+  String? userId;
   Profile({super.key, this.isMyProfile = true, this.userId});
   // late final ProfileController controller;
   @override
   Widget build(BuildContext context) {
+    userId ??= Get.arguments;
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
@@ -53,7 +54,12 @@ class Profile extends StatelessWidget {
                             style: const TextStyle(
                                 fontSize: 22, fontWeight: FontWeight.bold),
                           ),
-                          const Text("14 posts")
+                          Obx((){
+                            if(controller.statusCount.value!=-1 && controller.statusCount.value!=0){
+                              return Text("${controller.statusCount.value} posts");
+                            }
+                            return const SizedBox();
+                          })
                         ]),
                     Text(
                       controller.user.value.email,
@@ -106,7 +112,7 @@ class Profile extends StatelessWidget {
             height: 20,
           ),
           controller.isEmptyList.value
-              ? const Text("No status yet!")
+              ? Text(isMyProfile?"You don't have any statuses in this app yet.":"No statuses found for this user. Check back later!")
               : Expanded(
                   child: ListView.builder(
                       itemCount: controller.listStatus.length,

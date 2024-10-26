@@ -7,4 +7,5 @@ class RoutesNames {
   //setting routes
   static const String personalInfo = "/personal_info";
   static const String setting = "/setting";
+  static const String statusPage="/statusPage";
 }

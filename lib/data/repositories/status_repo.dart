@@ -1,4 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
+import 'package:myapp/common/dialogs/ask_dialog.dart';
+import 'package:myapp/common/dialogs/custom_snackbar.dart';
 import 'package:myapp/data/models/status.dart';
 import 'package:myapp/data/models/user.dart' as myuser;
 
@@ -118,6 +121,15 @@ class StatusRepo {
       return true;
     } catch (e) {
       throw Exception(e);
+    }
+  }
+
+  Future<void> deleteStatus(String statusId)async{
+    try{
+      await _firebaseFirestore.collection('status').doc(statusId).delete();
+      CustomSnackbar.showSuccessSnackbar(Get.context!,"status deleted success");
+    }catch(e){
+      CustomSnackbar.showErrorSnackbar(Get.context!,"Faild to delete this status");
     }
   }
 

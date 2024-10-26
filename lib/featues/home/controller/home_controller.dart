@@ -22,7 +22,7 @@ class HomeController extends GetxController {
   final prefs = Get.find<SharedPredManager>();
   final FirebaseFirestore firebaseFireStore = FirebaseFirestore.instance;
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  List<Status> listStatus = <Status>[].obs;
+  RxList<Status> listStatus = <Status>[].obs;
   var isLoading = true.obs;
   var fullName = "".obs;
   var myId = ''.obs;
@@ -35,7 +35,7 @@ class HomeController extends GetxController {
       listStatus.clear();
     }
     try {
-      listStatus=await _statusRepo.getStatus();
+      listStatus.value=await _statusRepo.getStatus();
       if (listStatus.isEmpty) {
         isEmptyList.value = true;
       } else {

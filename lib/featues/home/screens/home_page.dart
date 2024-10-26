@@ -52,7 +52,7 @@ class HomePage extends StatelessWidget {
                   title: Text("Hello ${controller.fullName}"),
                   subtitle: const Text("Welcom Back"),
                   onTap: () {
-                    Get.to(Profile(isMyProfile: false, userId: controller.myId.value));
+                    Get.to(Profile(isMyProfile: true, userId: controller.myId.value));
                   },
                 ),
                 const SizedBox(
@@ -86,7 +86,7 @@ class HomePage extends StatelessWidget {
                         return const Center(child: CircularProgressIndicator());
                       }
                       if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return const Center(child: Text("No status yet"));
+                        return const Center(child: Text("No statuses yet! Start by sharing one!"));
                       }
                       List<Status> listStatus=snapshot.data!;
                       return ListView.builder(

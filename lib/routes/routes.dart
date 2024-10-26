@@ -7,6 +7,7 @@ import 'package:myapp/featues/auth/screens/register.dart';
 import 'package:myapp/featues/home/screens/profile.dart';
 import 'package:myapp/featues/setting/screens/personal_info.dart';
 import 'package:myapp/featues/setting/screens/setting.dart';
+import 'package:myapp/featues/setting/screens/status_list.dart';
 import 'package:myapp/featues/setting/setting_binding.dart';
 import 'package:myapp/routes/routes_names.dart';
 
@@ -22,5 +23,6 @@ class Routes{
         //setting routes
         GetPage(name: RoutesNames.personalInfo, page:()=>PersonalInfo(),binding: SettingBinding()),
         GetPage(name: RoutesNames.setting, page:()=>Setting(),binding: SettingBinding()),
+        GetPage(name: RoutesNames.statusPage, page:()=>StatusList())
     ];
 }

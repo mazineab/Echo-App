@@ -8,6 +8,7 @@ import 'package:myapp/core/utils/localStorage/shared_pref_manager.dart';
 import 'package:myapp/data/models/status.dart';
 import 'package:myapp/data/models/user.dart' as myuser;
 import 'package:myapp/data/repositories/home_repo.dart';
+import 'package:myapp/featues/home/controller/home_controller.dart';
 
 class ProfileController extends GetxController
     with GetTickerProviderStateMixin {
@@ -19,6 +20,7 @@ class ProfileController extends GetxController
   var isEmptyList = false.obs;
   var isLoading = true.obs;
   var userId = ''.obs;
+  var statusCount=0.obs;
 
   //
   final HomeRepo homeRepo = Get.put(HomeRepo());
@@ -55,6 +57,10 @@ class ProfileController extends GetxController
     }
   }
 
+  getCountOfStatus()async{
+    statusCount.value=await homeRepo.getStatusCount(userId.value)??-1;
+  }
+
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -64,7 +70,9 @@ class ProfileController extends GetxController
       await getUserStatus(userId.value);
     } else {
       await getCurrentUser();
-      await getUserStatus(user.value.id);
+      await getUserStatus(userId.value);
     }
+
+    await getCountOfStatus();
   }
 }

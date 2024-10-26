@@ -42,6 +42,15 @@ class HomeRepo{
     }
   }
 
+  Future<int?> getStatusCount(String userId)async{
+    try{
+      final snapshot=await firebaseFireStore.collection('status').where('userId',isEqualTo: userId).count().get();
+      return snapshot.count;
+    }catch(e){
+      throw Exception("Error fetching status count : $e");
+    }
+  }
+
 
   Future<List<Status>> getStatusOfUser(String userId)async{
     try {

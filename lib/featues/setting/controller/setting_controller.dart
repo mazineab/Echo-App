@@ -168,6 +168,9 @@ class SettingController extends GetxController {
   goPersonalInfo(){
     Get.toNamed(RoutesNames.personalInfo);
   }
+  goStatusPage(){
+    Get.toNamed(RoutesNames.statusPage);
+  }
 }
 
 
