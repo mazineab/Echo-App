@@ -38,6 +38,7 @@ class CustomStatusWidget extends StatelessWidget {
           subtitle: status.content,
           isComment: false,
           uid: status.id,
+          statusId: status.id,
         ),
         Container(
           margin: const EdgeInsets.only(left: 85),

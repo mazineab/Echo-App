@@ -25,4 +25,13 @@ class MyDialog {
               );
             }) as Widget;
   }
+
+  static Future loadingAlert() {
+    return Get.dialog(
+      const Center(child: CircularProgressIndicator()),
+      barrierDismissible: false,
+    );
+  }
+
+
 }

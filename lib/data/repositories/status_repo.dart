@@ -158,5 +158,17 @@ class StatusRepo {
     }
   }
 
+  Future<Status> getDataOfStatus(String statusId)async{
+    try{
+      DocumentSnapshot docSnp= await _firebaseFirestore.collection('status').doc(statusId).get();
+      var data=docSnp.data() as Map<String,dynamic>;
+      return Status.fromJson(data);
+    }catch(e){
+      CustomSnackbar.showErrorSnackbar(Get.context!,"Faild to delete this comment");
+      throw Exception(e);
+    }
+
+  }
+
 }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/common/dialogs/custom_snackbar.dart';
+import 'package:myapp/common/dialogs/my_dialog.dart';
 import 'package:myapp/data/repositories/status_repo.dart';
 import 'package:myapp/featues/home/controller/profile_controller.dart';
 import 'package:myapp/featues/setting/controller/status_comment_controller.dart';
@@ -71,6 +72,8 @@ class AskDialog{
                     ),
                     ElevatedButton(
                       onPressed: ()async {
+                        Navigator.of(context).pop();
+                        MyDialog.loadingAlert();
                         try{
                           if(isStatus){
                             await Get.find<StatusRepo>().deleteStatus(statusId);
@@ -84,11 +87,12 @@ class AskDialog{
                           }else{
                             await Get.find<StatusRepo>().deleteComment(statusId: statusId,commentId: commentId!);
                           }
-                          Navigator.of(context).pop();
+
                         }catch(e){
                           CustomSnackbar.showErrorSnackbar(Get.context!,"SameThing went wrong");
+                        }finally{
+                          if (Get.isDialogOpen ?? false) Get.close(1);
                         }
-
                       },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

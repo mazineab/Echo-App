@@ -16,6 +16,7 @@ class AddStatusScreen extends StatelessWidget {
       canPop:false,
       onPopInvoked: (didPop) {
         Get.find<CustomDrawerController>().setSelectedHome();
+        controller.updateMode.value=false;
       },
       child: Scaffold(
         drawer:CustomDrawer(),
@@ -100,7 +101,12 @@ class AddStatusScreen extends StatelessWidget {
               child: Obx(
                 () => FilledButton(
                     onPressed: () async {
-                      await controller.submitStatus();
+                      if(!controller.updateMode.value){
+                        await controller.submitStatus();
+                      }else{
+                        await controller.updateStatus(controller.idOfStatus.value);
+                      }
+
                     },
                     style: FilledButton.styleFrom(
                       backgroundColor: Colors.lightBlue,
@@ -112,7 +118,7 @@ class AddStatusScreen extends StatelessWidget {
                         ? const CircularProgressIndicator(
                             color: Colors.white,
                           )
-                        : const Text("Write status")),
+                        : Text(controller.buttonText.value)),
               ),
             )
           ],

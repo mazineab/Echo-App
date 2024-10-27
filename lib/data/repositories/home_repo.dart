@@ -27,6 +27,16 @@ class HomeRepo{
     }
   }
 
+  Future<bool> updateStatus(String statusId,Map<String,dynamic> data)async{
+    try{
+      DocumentReference docRef= firebaseFireStore.collection('status').doc(statusId);
+      await docRef.update(data);
+      return true;
+    }catch(e){
+      throw Exception(e);
+    }
+  }
+
   Future<Map<String, dynamic>> getUserDataById(String userId) async {
     try {
       CollectionReference usersCollection = firebaseFireStore.collection('users');

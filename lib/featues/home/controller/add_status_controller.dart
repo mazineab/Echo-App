@@ -6,9 +6,11 @@ import 'package:get/get.dart';
 import 'package:myapp/common/dialogs/custom_snackbar.dart';
 import 'package:myapp/core/utils/localStorage/shared_pref_manager.dart';
 import 'package:myapp/data/models/enums.dart';
+import 'package:myapp/data/models/status.dart';
 import 'package:myapp/data/models/tag.dart';
 import 'package:myapp/data/models/user.dart';
 import 'package:myapp/data/repositories/home_repo.dart';
+import 'package:myapp/data/repositories/status_repo.dart';
 import 'package:myapp/featues/home/controller/home_controller.dart';
 
 import '../../../data/models/like.dart';
@@ -18,12 +20,16 @@ class AddStatusController extends GetxController {
   final HomeRepo homeRepo=Get.put(HomeRepo());
   TextEditingController statusController = TextEditingController();
   var isload = false.obs;
+  var buttonText="Write status".obs;
+  var updateMode=false.obs;
+  var idOfStatus=''.obs;
 
 
   var fullname = "".obs;
   var profileUrl = "".obs;
   var uid = "".obs;
   var listSelectedTags = <Tag>[].obs;
+
   final List<Tag> tags = [
     Tag(Tags.Development, icon: Icons.code),
     Tag(Tags.Economy, icon: Icons.monetization_on),
@@ -161,9 +167,56 @@ class AddStatusController extends GetxController {
     }
   }
 
+  setData(String statusId)async{
+    updateMode.value=true;
+    idOfStatus.value=statusId;
+    Status status=await Get.find<StatusRepo>().getDataOfStatus(statusId);
+    fullname.value=status.fullUserName??'';
+    profileUrl.value=status.profileUrl??'';
+    statusController.text=status.content;
+    listSelectedTags.assignAll(status.listTags);
+    buttonText.value="update";
+    update();
+  }
+
+  updateStatus(String statusId)async{
+    isload.value = true;
+    try{
+      Status status=await Get.find<StatusRepo>().getDataOfStatus(statusId);
+      status.content=statusController.text;
+      status.listTags.assignAll(listSelectedTags);
+      bool isUpdate=await homeRepo.updateStatus(statusId, status.toJson());
+      if(isUpdate){
+        CustomSnackbar.showSuccessSnackbar(Get.context!,"Success update this status");
+      }
+    }catch(e){
+      CustomSnackbar.showErrorSnackbar(Get.context!,"Faild update this status");
+    }
+    finally {
+      isload.value = false;
+    }
+  }
+
+
+  listenerMode(){
+    ever(updateMode, (_) {
+      statusController.clear();
+      if(updateMode.value) {
+        buttonText.value = "update";
+      } else {
+        buttonText.value = "Write status";
+      }
+    });
+  }
+
+
+
   @override
   void onInit() {
     super.onInit();
     fetchLocalData();
+    listenerMode();
   }
+
+
 }
