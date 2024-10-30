@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:myapp/data/models/comment.dart';
 import 'package:myapp/data/models/status.dart';
 import 'package:myapp/data/models/user.dart' as my_user;
 
@@ -70,6 +71,28 @@ class HomeRepo{
       listStatus=querySnapshot.docs.map((e)=>Status.fromJson(e.data() as Map<String,dynamic>)).toList();
       return listStatus;
     } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<List<Comment>> getCommentOfUser(String userId)async{
+    try{
+      List<Map<String, dynamic>> allUserComments = [];
+
+      
+      CollectionReference statusCollection = firebaseFireStore.collection('status');
+      QuerySnapshot statusSnapshot = await statusCollection.get();
+      for (var statusDoc in statusSnapshot.docs) {
+        CollectionReference commentsCollection = statusDoc.reference.collection('comments');
+        QuerySnapshot commentsSnapshot = await commentsCollection.where('userId', isEqualTo: userId).get();
+
+        for (var commentDoc in commentsSnapshot.docs) {
+          allUserComments.add(commentDoc.data() as Map<String, dynamic>);
+        }
+      }
+
+      return allUserComments.map((e)=>Comment.fromJson(e)).toList();
+    }catch(e){
       throw Exception(e);
     }
   }

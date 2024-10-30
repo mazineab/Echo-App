@@ -5,6 +5,7 @@ import 'package:myapp/featues/home/screens/home_page.dart';
 import 'package:myapp/featues/auth/screens/login.dart';
 import 'package:myapp/featues/auth/screens/register.dart';
 import 'package:myapp/featues/home/screens/profile.dart';
+import 'package:myapp/featues/setting/screens/comments_list.dart';
 import 'package:myapp/featues/setting/screens/personal_info.dart';
 import 'package:myapp/featues/setting/screens/setting.dart';
 import 'package:myapp/featues/setting/screens/status_list.dart';
@@ -23,6 +24,7 @@ class Routes{
         //setting routes
         GetPage(name: RoutesNames.personalInfo, page:()=>PersonalInfo(),binding: SettingBinding()),
         GetPage(name: RoutesNames.setting, page:()=>Setting(),binding: SettingBinding()),
-        GetPage(name: RoutesNames.statusPage, page:()=>StatusList())
+        GetPage(name: RoutesNames.statusPage, page:()=>StatusList()),
+        GetPage(name: RoutesNames.commentPage, page:()=>CommentsList())
     ];
 }
