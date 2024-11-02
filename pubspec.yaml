@@ -45,6 +45,7 @@ dependencies:
   image_picker: ^1.1.2
   permission_handler: ^11.3.1
   flutter_native_splash: ^2.4.0
+  icons_launcher: ^3.0.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -66,6 +67,13 @@ flutter_native_splash:
   android_12:
     color: "#000000"
     image: "assets/images/echo.png"
+
+
+icons_launcher:
+  image_path: "assets/images/echo.png"
+  platforms:
+    android:
+      enable: true
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
