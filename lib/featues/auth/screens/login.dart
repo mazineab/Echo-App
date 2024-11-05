@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/Constants/colors.dart';
 import 'package:myapp/common/widgets/custom_button.dart';
 import 'package:myapp/common/widgets/custom_text_fields.dart';
 import 'package:myapp/common/widgets/custom_text_navigation.dart';
@@ -14,6 +15,7 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MyColors.backgroundColor,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -24,8 +26,8 @@ class Login extends StatelessWidget {
               children: [
                 SizedBox(height: MediaQuery.of(context).size.height / 7),
                 const Text("Sign in to start sharing your updates!",
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                style:TextStyle(fontSize: 20, fontWeight: FontWeight.bold
+                ,color: Colors.white)),
                 SizedBox(height: MediaQuery.of(context).size.height / 6),
                 CustomTextFeild(
                     label: "Email",

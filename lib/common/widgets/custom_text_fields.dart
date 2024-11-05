@@ -23,9 +23,15 @@ class CustomTextFeild extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         obscureText: isPassword,
+        style: TextStyle(color: Colors.white),
         decoration: InputDecoration(
           label: Text(label),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          labelStyle: TextStyle(color: Colors.white70),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.white),
+          ),
         ),
       ),
     );

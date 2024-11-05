@@ -14,15 +14,18 @@ class CommentsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MyColors.backgroundColor,
       body: CustomScrollView(
         slivers: [
-          const SliverAppBar(
+          SliverAppBar(
             expandedHeight: 40.0,
             floating: true,
             pinned: false,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text('Your Comment'),
+              title: Text('Your Comment',style: TextStyle(color: Colors.white)),
             ),
+            backgroundColor: MyColors.appBarColor,
+            iconTheme: IconThemeData(color: Colors.white),
           ),
           Obx(() {
             if (controller.isLoad.value) {
@@ -41,7 +44,7 @@ class CommentsList extends StatelessWidget {
             }else if(!controller.isLoad.value && controller.listComments.isEmpty){
               return const SliverFillRemaining(
                 child: Center(
-                    child: Text("You don't have any Comment in this app yet.")
+                    child: Text("You don't have any Comment in this app yet.",style: TextStyle(color: Colors.white))
                 ),
               );
             }

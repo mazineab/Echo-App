@@ -12,6 +12,8 @@ class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+
+      backgroundColor: Colors.black,
         child: Column(
       children: [
         buildHeader(),
@@ -19,7 +21,7 @@ class CustomDrawer extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 50),
           child: const Divider(
             height: 1,
-            color: Color.fromARGB(65, 0, 0, 0),
+            color: Colors.white60,
           ),
         ),
         Obx(()=>
@@ -49,7 +51,7 @@ class CustomDrawer extends StatelessWidget {
             children: [
               Text(
                 controller.user.value.getFullName(),
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.white),
           ),
           const SizedBox(
             height: 20,

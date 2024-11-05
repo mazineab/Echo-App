@@ -12,16 +12,18 @@ class PersonalInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(),
+      backgroundColor: MyColors.backgroundColor,
       body: CustomScrollView(
         slivers: [
-          const SliverAppBar(
+          SliverAppBar(
             expandedHeight: 40.0,
             floating: true,
             pinned: false,
+            backgroundColor: MyColors.appBarColor,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text('Personal Information'),
+              title: Text('Personal Information',style: TextStyle(color: Colors.white),),
             ),
+            iconTheme: IconThemeData(color: Colors.white),
           ),
           SliverToBoxAdapter(
             child: SizedBox(
@@ -59,7 +61,7 @@ class PersonalInfo extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.only(left: 30),
                     width: double.infinity,
-                      child: const Text("Gender",textAlign: TextAlign.start,)
+                      child: const Text("Gender",textAlign: TextAlign.start,style: TextStyle(color: Colors.white),)
                   ),const SizedBox(height: 5),
                   Obx(
                         () => buildGenderRadios(controller.group.value, (String value) {
@@ -134,17 +136,19 @@ class PersonalInfo extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label),
+            Text(label,style: TextStyle(color: Colors.white),),
             const SizedBox(height: 5),
             Container(
               height: 45,
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               decoration: BoxDecoration(
-                border: Border.all(color: const Color.fromARGB(91, 158, 158, 158)),
+                border: Border.all(color: const Color.fromARGB(
+                    169, 243, 240, 240)),
                 borderRadius: BorderRadius.circular(5),
               ),
               child: TextField(
+                style: TextStyle(color: Colors.white),
                 controller: textController,  // Use the created controller
                 decoration: InputDecoration(
                   border: InputBorder.none,
@@ -179,13 +183,13 @@ class PersonalInfo extends StatelessWidget {
                   decoration: BoxDecoration(
                     border: Border.all(color: const Color.fromARGB(91, 158, 158, 158)),
                     color: groupValue == "Male"
-                        ? Colors.lightBlueAccent.withOpacity(0.4)
+                        ? Colors.lightBlueAccent.withOpacity(0.5)
                         : null,
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: RadioListTile(
                     activeColor: Colors.white,
-                    title: const Text("Male"),
+                    title: const Text("Male",style: TextStyle(color: Colors.white)),
                     value: "Male",
                     groupValue: groupValue,
                     onChanged: (value) => onChanged(value??''),
@@ -199,12 +203,12 @@ class PersonalInfo extends StatelessWidget {
                     border: Border.all(color: const Color.fromARGB(91, 158, 158, 158)),
                     borderRadius: BorderRadius.circular(5),
                     color: groupValue == "Female"
-                        ? const Color.fromARGB(255, 255, 0, 170).withOpacity(0.2)
+                        ? const Color.fromARGB(255, 255, 0, 170).withOpacity(0.5)
                         : null,
                   ),
                   child: RadioListTile(
                     activeColor: Colors.white,
-                    title: const Text("Female"),
+                    title: const Text("Female",style: TextStyle(color: Colors.white)),
                     value: "Female",
                     groupValue: groupValue,
                     onChanged: (value) => onChanged(value??''),

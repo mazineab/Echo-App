@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/Constants/colors.dart';
 import 'package:myapp/common/widgets/custom_status_widget.dart';
 import 'package:myapp/common/widgets/image_widget.dart';
 import 'package:myapp/featues/home/controller/profile_controller.dart';
@@ -22,10 +23,13 @@ class Profile extends StatelessWidget {
         Get.find<CustomDrawerController>().setSelectedHome();
       },
       child: Scaffold(
+        backgroundColor: MyColors.backgroundColor,
         appBar: AppBar(
+          backgroundColor: MyColors.appBarColor,
+          iconTheme: IconThemeData(color: Colors.white),
           title: const Text(
             "Profile",
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
           ),
         ),
         drawer: CustomDrawer(),
@@ -52,11 +56,12 @@ class Profile extends StatelessWidget {
                           Text(
                             controller.user.value.getFullName(),
                             style: const TextStyle(
+                              color: Colors.white,
                                 fontSize: 22, fontWeight: FontWeight.bold),
                           ),
                           Obx((){
                             if(controller.statusCount.value!=-1 && controller.statusCount.value!=0){
-                              return Text("${controller.statusCount.value} posts");
+                              return Text("${controller.statusCount.value} posts",style: TextStyle(color: Colors.white));
                             }
                             return const SizedBox();
                           })
@@ -64,7 +69,7 @@ class Profile extends StatelessWidget {
                     Text(
                       controller.user.value.email,
                       style: const TextStyle(
-                          color: Color.fromARGB(255, 46, 46, 46)),
+                          color: Colors.white70),
                     ),
                     const SizedBox(
                       height: 15,
@@ -84,8 +89,7 @@ class Profile extends StatelessWidget {
                     255, 29, 170, 247), // Changes the color of the indicator
                 labelColor: const Color.fromARGB(200, 33, 149,
                     243), // Changes the color of the selected label
-                unselectedLabelColor: const Color.fromARGB(
-                    255, 0, 0, 0), // Changes the color of unselected labels
+                unselectedLabelColor:Colors.white70
               ),
               Expanded(
                 child: TabBarView(

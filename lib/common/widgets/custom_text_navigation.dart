@@ -15,7 +15,7 @@ class CustomTextNavigation extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            firstText,
+            firstText,style: TextStyle(color: Colors.white),
           ),
           TextButton(
               onPressed:onTap,

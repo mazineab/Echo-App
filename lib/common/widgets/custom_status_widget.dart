@@ -81,13 +81,13 @@ class CustomStatusWidget extends StatelessWidget {
       children: [
         Icon(
           Icons.calendar_month,
-          color: Colors.grey.shade400,
+          color: Colors.white.withOpacity(0.6),
           size: 20,
         ),
         Text(
           status.formattedCreatedAt(),
           style: const TextStyle(
-              fontSize: 13, color: Color.fromARGB(255, 0, 0, 0)),
+              fontSize: 13, color: Colors.white),
         ),
       ],
     );
@@ -124,7 +124,7 @@ class CustomStatusWidget extends StatelessWidget {
                     : FontAwesomeIcons.heart,
                 color: isLiked.value
                     ? Colors.red
-                    : const Color.fromARGB(255, 212, 212, 212),
+                    : Colors.white.withOpacity(0.6),
               ),
               const SizedBox(
                 width: 5,
@@ -149,6 +149,7 @@ class CustomStatusWidget extends StatelessWidget {
         controllerB.setListComment(status.listComments!);
 
         showModalBottomSheet(
+          backgroundColor:Color(0xFF0F0F0F),
             isScrollControlled: true,
             context: Get.context!,
             builder: (context) {
@@ -164,9 +165,9 @@ class CustomStatusWidget extends StatelessWidget {
       child: GetBuilder<HomeController>(
         builder: (_) => Row(
           children: [
-            const Icon(
+            Icon(
               Icons.comment,
-              color: Color.fromARGB(255, 212, 212, 212),
+              color: Colors.white.withOpacity(0.6),
             ),
             const SizedBox(
               width: 5,

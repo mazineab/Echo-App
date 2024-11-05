@@ -21,7 +21,11 @@ class Setting extends StatelessWidget {
         return false;
       },
       child: Scaffold(
-        appBar: AppBar(),
+        backgroundColor: MyColors.backgroundColor,
+        appBar: AppBar(
+          backgroundColor: MyColors.appBarColor,
+          iconTheme: IconThemeData(color: Colors.white),
+        ),
         drawer: CustomDrawer(),
         body: SingleChildScrollView(
           child: Column(
@@ -61,7 +65,7 @@ class Setting extends StatelessWidget {
               child: Column(
             children: [
               ListTile(
-                title: Text("${controller.user.value.getFullName()}",style: const TextStyle(fontWeight: FontWeight.bold),),
+                title: Text("${controller.user.value.getFullName()}",style: const TextStyle(fontWeight: FontWeight.bold,color: Colors.white),),
                 subtitle: Text(controller.user.value.email),
               )
             ],
@@ -89,7 +93,7 @@ class Setting extends StatelessWidget {
       child: ListTile(
         onTap: onTap,
         leading: Icon(iconPrefix,color: MyColors.colorbl,),
-        title: Text(value,style: TextStyle(color: Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500)),
+        title: Text(value,style: TextStyle(color: Colors.white.withOpacity(0.9),fontWeight: FontWeight.w500)),
         trailing: Icon(Icons.chevron_right_sharp,color: MyColors.colorbl,),
       ),
     );
