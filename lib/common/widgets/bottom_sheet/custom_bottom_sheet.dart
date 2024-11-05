@@ -23,7 +23,7 @@ class CustomBottomSheet extends StatelessWidget {
                 ? const Center(
                     child: Text(
                       'No comments yet',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                      style: TextStyle(fontSize: 16, color: Colors.white),
                     ),
                   )
                 : Padding(
@@ -53,7 +53,7 @@ class CustomBottomSheet extends StatelessWidget {
             margin: const EdgeInsets.only(
                 bottom: 10, left: 10, right: 10),
             decoration: BoxDecoration(
-              color: const Color.fromARGB(69, 215, 212, 212),
+              color: const Color.fromARGB(239, 236, 232, 232),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Row(
@@ -68,7 +68,7 @@ class CustomBottomSheet extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.send),
+                  icon: const Icon(Icons.send,color: Colors.black,),
                   onPressed: () async {
                     try {
                       await controller.commentUpdate(status);

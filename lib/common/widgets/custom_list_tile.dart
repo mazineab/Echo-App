@@ -52,8 +52,8 @@ class CustomListTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title,style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),),
-                  Text(subtitle,style: const TextStyle(fontSize:16))
+                  Text(title,style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold,color: Colors.white),),
+                  Text(subtitle,style: const TextStyle(fontSize:16,color: Colors.white))
                 ],
               ),
             ),
@@ -75,6 +75,7 @@ class CustomListTile extends StatelessWidget {
 
   Widget buildMenu(){
     return PopupMenuButton(
+      iconColor: Colors.white,
       onSelected: (e)async{
         if(e=="delete" && !isComment && uid!=null){
           AskDialog.showDeleteConfirmationDialog(Get.context!,statusId:uid!,userId:userId);

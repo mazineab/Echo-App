@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/Constants/colors.dart';
 import 'package:myapp/common/drawer/custom_drawer.dart';
 import 'package:myapp/common/widgets/image_widget.dart';
 import 'package:myapp/featues/home/controller/add_status_controller.dart';
@@ -20,9 +21,11 @@ class AddStatusScreen extends StatelessWidget {
       },
       child: Scaffold(
         drawer:CustomDrawer(),
-        backgroundColor: Colors.white,
+        backgroundColor:MyColors.backgroundColor,
         appBar: AppBar(
-          title: const Text("Create status"),
+          backgroundColor: MyColors.appBarColor,
+          iconTheme: IconThemeData(color: Colors.white),
+          title: const Text("Create status",style: TextStyle(color: Colors.white),),
         ),
         body: SingleChildScrollView(
             child: Column(
@@ -34,7 +37,7 @@ class AddStatusScreen extends StatelessWidget {
                 children: [const SizedBox(width: 10,),
               ImageWidget(userName: controller.fullname.value,imageUrl: controller.profileUrl.value),
                   const SizedBox(width: 10),
-                  Text(controller.fullname.value,style:const TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                  Text(controller.fullname.value,style:const TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white)),
               ]
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.12),
@@ -44,8 +47,10 @@ class AddStatusScreen extends StatelessWidget {
                   controller: controller.statusController,
                   minLines: 6,
                   maxLines: null,
+                  style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     hintText: "Write you status and share with the world!",
+                    hintStyle: TextStyle(color: Colors.white70),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10)),
                   )),
@@ -63,10 +68,13 @@ class AddStatusScreen extends StatelessWidget {
                       size: 25,
                       Icons.add,
                       color: Colors.lightBlue,
-                    ),
-                    Text(
-                      "Montion tags",
-                      style: TextStyle(fontSize: 18),
+                    ),SizedBox(width: 3),
+                    Padding(
+                      padding: EdgeInsets.only(top:2),
+                      child: Text(
+                        "Montion tags",
+                        style: TextStyle(fontSize: 18,color: Colors.white),
+                      ),
                     )
                   ],
                 ),

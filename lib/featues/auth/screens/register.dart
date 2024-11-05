@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/Constants/colors.dart';
 import 'package:myapp/common/widgets/custom_button.dart';
 import 'package:myapp/common/widgets/custom_text_fields.dart';
 import 'package:myapp/featues/auth/controllers/auth_controller.dart';
@@ -15,6 +16,7 @@ class Register extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:MyColors.backgroundColor,
       body: SingleChildScrollView(
         child: Form(
           key: controller.formKey,
@@ -23,7 +25,7 @@ class Register extends StatelessWidget {
             children: [
               SizedBox(height: MediaQuery.of(context).size.height / 8),
               const Text("Sign up to start sharing your updates!",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.white)),
               SizedBox(height: MediaQuery.of(context).size.height / 10),
               Row(
                 children: [
@@ -64,23 +66,24 @@ class Register extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Radio(
+                    Radio(activeColor: Colors.white,
                         value: "Male",
                         groupValue: controller.sexeVal,
                         onChanged: (val) {
                           controller.changeSexeVal(val ?? "");
                         }),
-                    const Text("Male"),
+                    const Text("Male",style: TextStyle(color: Colors.white)),
                     const SizedBox(
                       width: 50,
                     ),
                     Radio(
+                      activeColor: Colors.white,
                         value: "Femel",
                         groupValue: controller.sexeVal,
                         onChanged: (val) {
                           controller.changeSexeVal(val ?? "");
                         }),
-                    const Text("Femel")
+                    const Text("Femel",style: TextStyle(color: Colors.white))
                   ],
                 ),
               ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/Constants/colors.dart';
 import 'package:myapp/common/dialogs/my_dialog.dart';
 import 'package:myapp/common/drawer/custom_drawer.dart';
 import 'package:myapp/common/widgets/custom_status_widget.dart';
@@ -25,7 +26,11 @@ class HomePage extends StatelessWidget {
         }
       },
       child: Scaffold(
-        appBar: AppBar(),
+        backgroundColor: MyColors.backgroundColor,
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.white),
+          backgroundColor:MyColors.appBarColor,
+        ),
         drawer: CustomDrawer(),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.lightBlue,
@@ -49,8 +54,8 @@ class HomePage extends StatelessWidget {
               children: [
                 ListTile(
                   leading: ImageWidget(imageUrl: controller.imageUrl.value,userName: controller.fullName.value),
-                  title: Text("Hello ${controller.fullName}"),
-                  subtitle: const Text("Welcom Back"),
+                  title: Text("Hello ${controller.fullName}",style: TextStyle(color: Colors.white)),
+                  subtitle: const Text("Welcom Back",style: TextStyle(color: Colors.grey),),
                   onTap: () {
                     Get.to(Profile(isMyProfile: true, userId: controller.myId.value));
                   },
@@ -60,33 +65,18 @@ class HomePage extends StatelessWidget {
                 ),
                 Container(
                     margin: const EdgeInsets.only(left: 20),
-                    child: const Text("Recent Status:",
+                    child: Text("Recent Status:",
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold))),
-                // Expanded(
-                //   child: controller.isEmptyList.value
-                //       ? const Center(child: Text("No status yet"))
-                //       : GetBuilder<HomeController>(builder: (_)=>
-                //         ListView.builder(
-                //             itemCount: controller.listStatus.length,
-                //             itemBuilder: (context, index) {
-                //               Status status = controller.listStatus[index];
-                //               return CustomStatusWidget(
-                //                 profileUrl: status.profileUrl??'',
-                //                 fullName: status.fullUserName!,
-                //                 status: status,
-                //               );
-                //             }),
-                //       ),
-                // ),
+                            fontSize: 18, fontWeight: FontWeight.bold,color: Colors.white))),
+                SizedBox(height: 10),
                 Expanded(child: StreamBuilder(
                     stream:controller.getStatuss(),
                     builder: (context,snapshot){
                       if(snapshot.connectionState==ConnectionState.waiting){
-                        return const Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator(backgroundColor: Colors.white,));
                       }
                       if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return const Center(child: Text("No statuses yet! Start by sharing one!"));
+                        return const Center(child: Text("No statuses yet! Start by sharing one!",style: TextStyle(color: Colors.white),));
                       }
                       List<Status> listStatus=snapshot.data!;
                       return ListView.builder(
