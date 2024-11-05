@@ -96,7 +96,7 @@ class Profile extends StatelessWidget {
                   controller: controller.tabController,
                   children: [
                     listViewStatus(controller),
-                    buildAbout(controller), // Content for second tab
+                    SingleChildScrollView(child: buildAbout(controller)),
                   ],
                 ),
               ),
@@ -136,44 +136,56 @@ class Profile extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(height: 10),
-        buildRowInformation("First Name", controller.user.value.firstName),
-        buildRowInformation("Last Name", controller.user.value.lastName),
-        buildRowInformation("Email", controller.user.value.email),
-        buildRowInformation("Sexe",
+        buildInformation("First Name", controller.user.value.firstName),
+        buildInformation("Last Name", controller.user.value.lastName),
+        buildInformation("Email", controller.user.value.email),
+        buildInformation("Sexe",
             controller.user.value.sexe == Sexe.male ? "Male" : "Female"),
-        buildRowInformation("Bio", controller.user.value.bio ?? ''),
-        buildRowInformation("Phne Number", controller.user.value.phoneNumber),
+        buildInformation("Bio", controller.user.value.bio ?? ''),
+        buildInformation("Phone Number", controller.user.value.phoneNumber),
       ],
     );
   }
 
-  Widget buildRowInformation(String title, String content) {
+  Widget buildInformation(String title, String content) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 50),
-      child: Row(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+      decoration: BoxDecoration(
+        color: Colors.grey[900], // Dark background color
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 4,
+            offset: Offset(0, 2), // Slight shadow for depth
+          ),
+        ],
+      ),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Expanded(
-            // flex: 2,
-            child: Text(
-              title,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.start,
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.white, // White color for the title
             ),
           ),
-          const SizedBox(
-            width: 10,
-          ),
-          Expanded(
-            child: Text(
-              content,
-              textAlign: TextAlign.right,
+          const SizedBox(height: 5),
+          Text(
+            content,
+            style: const TextStyle(
+              fontSize: 16,
+              color: Colors.grey, // Lighter color for the content
             ),
-            // flex: 3,
-          )
+          ),
         ],
       ),
     );
   }
+
+
 }

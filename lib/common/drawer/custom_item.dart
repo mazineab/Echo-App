@@ -30,12 +30,12 @@ class CustomItem extends StatelessWidget {
           leading: Icon(iconData,
               color: isSelected
                   ? const Color.fromARGB(228, 114, 206, 249)
-                  : const Color(0xFF37383c)),
+                  :  Colors.grey[400]),
           title: Text(title,
               style: TextStyle(
                   color: isSelected
                       ? const Color.fromARGB(228, 114, 206, 249)
-                      : const Color(0xFF37383c))),
+                      : Colors.grey[400])),
           //non selected color #9e9ea1
           //selected color #37383c
         ),
