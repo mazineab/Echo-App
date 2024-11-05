@@ -134,7 +134,7 @@ class CustomStatusWidget extends StatelessWidget {
                     ? ""
                     : lenghtOf.value.toString() == '0'
                         ? ''
-                        : lenghtOf.value.toString(),
+                        : lenghtOf.value.toString(),style: TextStyle(color: Colors.white),
               ),
             ],
           ),
@@ -176,7 +176,7 @@ class CustomStatusWidget extends StatelessWidget {
                 ? ""
                 : status.commentCount == '0'
                     ? ''
-                    : status.commentCount.toString()),
+                    : status.commentCount.toString(),style: TextStyle(color: Colors.white)),
           ],
         ),
       ),
