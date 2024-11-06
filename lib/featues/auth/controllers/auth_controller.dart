@@ -122,17 +122,20 @@ class AuthController extends GetxController {
         context: Get.context!,
         builder: (context) {
           return AlertDialog(
-            title: const Text('Reset Password'),
+            backgroundColor: Colors.grey[900],
+            title: const Text('Reset Password',style: TextStyle(color: Colors.white)),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Text(
-                    'Enter your email to receive a reset password link:'),
+                    'Enter your email to receive a reset password link:',style: TextStyle(color: Colors.white)),
                 const SizedBox(height: 10),
                 TextField(
                   controller: emailReset,
+                  style: TextStyle(color: Colors.white),
                   decoration: const InputDecoration(
                     labelText: 'Email',
+                    labelStyle: TextStyle(color: Colors.white70),
                     border: OutlineInputBorder(),
                   ),
                   keyboardType: TextInputType.emailAddress,
@@ -153,7 +156,7 @@ class AuthController extends GetxController {
                     await authRepo.resetPassword(emailReset.text);
                     CustomSnackbar.showSuccessSnackbar(
                         Get.context!, "Link sent successfully.");
-                    Get.back();
+                    Get.close(0);
                   } catch (e) {
                     CustomSnackbar.showErrorSnackbar(Get.context!, "Error $e");
                   }

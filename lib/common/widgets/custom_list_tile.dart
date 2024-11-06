@@ -4,6 +4,7 @@ import 'package:myapp/common/dialogs/ask_dialog.dart';
 import 'package:myapp/common/widgets/image_widget.dart';
 import 'package:myapp/data/models/status.dart';
 import 'package:myapp/data/repositories/status_repo.dart';
+import 'package:myapp/featues/auth/controllers/auth_controller.dart';
 import 'package:myapp/featues/home/controller/add_status_controller.dart';
 import 'package:myapp/featues/home/controller/current_user_controller.dart';
 import 'package:myapp/featues/home/controller/home_controller.dart';
@@ -32,8 +33,9 @@ class CustomListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        bool myProfile=Get.find<CurrentUserController>().me.value.firstName==title;
         Get.to(Profile(
-          isMyProfile: false,
+          isMyProfile: myProfile,
           userId: userId,
         ));
       },

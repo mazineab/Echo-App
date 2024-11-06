@@ -66,7 +66,7 @@ class Setting extends StatelessWidget {
             children: [
               ListTile(
                 title: Text("${controller.user.value.getFullName()}",style: const TextStyle(fontWeight: FontWeight.bold,color: Colors.white),),
-                subtitle: Text(controller.user.value.email),
+                subtitle: Text(controller.user.value.email,style: TextStyle(color: Colors.white70),),
               )
             ],
           ))
@@ -82,7 +82,7 @@ class Setting extends StatelessWidget {
           style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.black
+              color: Colors.white
           )),
     );
   }
@@ -93,7 +93,7 @@ class Setting extends StatelessWidget {
       child: ListTile(
         onTap: onTap,
         leading: Icon(iconPrefix,color: MyColors.colorbl,),
-        title: Text(value,style: TextStyle(color: Colors.white.withOpacity(0.9),fontWeight: FontWeight.w500)),
+        title: Text(value,style: TextStyle(color: Colors.white.withOpacity(0.8),fontWeight: FontWeight.w500)),
         trailing: Icon(Icons.chevron_right_sharp,color: MyColors.colorbl,),
       ),
     );

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/common/dialogs/custom_snackbar.dart';
+import 'package:myapp/common/widgets/image_widget.dart';
 import 'package:myapp/core/utils/localStorage/shared_pref_manager.dart';
 import 'package:myapp/data/models/status.dart';
 import 'package:myapp/data/models/user.dart' as myuser;
@@ -75,4 +76,38 @@ class ProfileController extends GetxController
 
     await getCountOfStatus();
   }
+
+  void showImageDialog(String url) {
+    showDialog(
+      context: Get.context!,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.transparent,
+          content: GestureDetector(
+            onTap: ()=>Get.back,
+            child: Container(
+              height: 250,
+              child: Column(
+                  children: [
+                    imageW(url)
+                  ]),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  imageW(String url){
+    return Container(
+      width: 180,height: 180,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(100),
+        image: DecorationImage(image: NetworkImage(url),fit: BoxFit.cover)
+      ),
+    );
+  }
+
+
 }

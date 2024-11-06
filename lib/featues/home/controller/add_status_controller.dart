@@ -78,13 +78,14 @@ class AddStatusController extends GetxController {
         context: Get.context!,
         builder: (context) {
           return AlertDialog(
-            title: const Text("Selcted tags"),
+            backgroundColor: Colors.grey[900],
+            title: const Text("Selcted tags",style: TextStyle(color: Colors.white)),
             content: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Select just 3 tags"),
+                  const Text("Select just 3 tags",style: TextStyle(color: Colors.white)),
                   Wrap(
                     spacing: 8.0, // Horizontal spacing between tags
                     runSpacing: 4.0, // Vertical spacing between lines
@@ -126,7 +127,7 @@ class AddStatusController extends GetxController {
             color: Colors.white,
           ),
           shape: RoundedRectangleBorder(
-            side: const BorderSide(color: Colors.white, width: 1),
+            side: BorderSide.none,
             borderRadius: BorderRadius.circular(15),
           ),
           label: Text(
