@@ -9,6 +9,7 @@ import 'package:myapp/featues/setting/screens/comments_list.dart';
 import 'package:myapp/featues/setting/screens/personal_info.dart';
 import 'package:myapp/featues/setting/screens/setting.dart';
 import 'package:myapp/featues/setting/screens/status_list.dart';
+import 'package:myapp/featues/setting/screens/users_list.dart';
 import 'package:myapp/featues/setting/setting_binding.dart';
 import 'package:myapp/routes/routes_names.dart';
 
@@ -25,6 +26,7 @@ class Routes{
         GetPage(name: RoutesNames.personalInfo, page:()=>PersonalInfo(),binding: SettingBinding()),
         GetPage(name: RoutesNames.setting, page:()=>Setting(),binding: SettingBinding()),
         GetPage(name: RoutesNames.statusPage, page:()=>StatusList()),
-        GetPage(name: RoutesNames.commentPage, page:()=>CommentsList())
+        GetPage(name: RoutesNames.commentPage, page:()=>CommentsList()),
+        GetPage(name: RoutesNames.usersPage, page:()=>UsersList())
     ];
 }

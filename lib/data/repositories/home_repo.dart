@@ -96,4 +96,14 @@ class HomeRepo{
       throw Exception(e);
     }
   }
+
+  Future<List<my_user.User>> getUsers()async{
+    try{
+      QuerySnapshot querySnapshot=await firebaseFireStore.collection('users').get();
+      List<my_user.User> listUsers=querySnapshot.docs.map((e)=>my_user.User.fromJson(e.data() as Map<String,dynamic>)).toList();
+      return listUsers;
+    }catch(e){
+      throw e;
+    }
+  }
 }

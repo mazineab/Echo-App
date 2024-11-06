@@ -27,7 +27,7 @@ class CommentsList extends StatelessWidget {
             backgroundColor: MyColors.appBarColor,
             iconTheme: IconThemeData(color: Colors.white),
           ),
-          Obx(() {
+          GetBuilder<StatusCommentController>(builder: (_) {
             if (controller.isLoad.value) {
               return SliverFillRemaining(
                 child: Column(
