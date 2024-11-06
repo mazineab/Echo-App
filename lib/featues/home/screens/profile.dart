@@ -93,9 +93,9 @@ class Profile extends StatelessWidget {
                 controller: controller.tabController,
                 tabs: const [Tab(text: "Posts"), Tab(text: "About")],
                 indicatorColor: const Color.fromARGB(
-                    255, 29, 170, 247), // Changes the color of the indicator
+                    255, 29, 170, 247),
                 labelColor: const Color.fromARGB(200, 33, 149,
-                    243), // Changes the color of the selected label
+                    243),
                 unselectedLabelColor:Colors.white70
               ),
               Expanded(
