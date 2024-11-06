@@ -41,9 +41,16 @@ class Profile extends StatelessWidget {
           :Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20,top: 10),
-                child:ImageWidget(width: 100,height: 100,imageUrl:controller.user.value.imageUrl??'',userName: controller.user.value.getFullName(),),
+              GestureDetector(
+                onTap: (){
+                  if(controller.user.value.imageUrl!=null){
+                    controller.showImageDialog(controller.user.value.imageUrl!);
+                  }
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20,top: 10),
+                  child:ImageWidget(width: 100,height: 100,imageUrl:controller.user.value.imageUrl??'',userName: controller.user.value.getFullName(),),
+                ),
               ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -116,7 +123,7 @@ class Profile extends StatelessWidget {
             height: 20,
           ),
           controller.isEmptyList.value
-              ? Text(isMyProfile?"You don't have any statuses in this app yet.":"No statuses found for this user. Check back later!")
+              ? Text(isMyProfile?"You don't have any statuses in this app yet.":"No statuses found for this user. Check back later!",style: TextStyle(color: Colors.white),)
               : Expanded(
                   child: ListView.builder(
                       itemCount: controller.listStatus.length,

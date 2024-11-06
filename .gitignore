@@ -44,3 +44,4 @@ app.*.map.json
 android/app/google-services.json
 assets/images/echo.png
 assets/icon/icon.png
+.env
