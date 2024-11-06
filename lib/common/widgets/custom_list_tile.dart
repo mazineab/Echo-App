@@ -18,7 +18,7 @@ class CustomListTile extends StatelessWidget {
   final String userId;
   String? uid;
   String? profileUrl;
-  String? statusId;//this add just when this widget used by comment
+  String? statusId;
   CustomListTile(
       {super.key,
       required this.title,
@@ -59,7 +59,7 @@ class CustomListTile extends StatelessWidget {
                 ],
               ),
             ),
-            menuCondition()
+            statusId==null && uid==null?SizedBox() :menuCondition()
           ],
         ),
       ),

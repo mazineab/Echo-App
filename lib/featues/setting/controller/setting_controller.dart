@@ -174,6 +174,9 @@ class SettingController extends GetxController {
   goCommentPage(){
     Get.toNamed(RoutesNames.commentPage);
   }
+  goUsersPage(){
+    Get.toNamed(RoutesNames.usersPage);
+  }
 }
 
 

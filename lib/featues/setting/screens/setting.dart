@@ -40,6 +40,7 @@ class Setting extends StatelessWidget {
               }),
               buildListTile("Notifications Preferences", Icons.notifications_outlined),
               buildTitle("Community Setting"),
+              buildListTile("Users", Icons.groups,onTap: controller.goUsersPage),
               buildListTile("Comment List", Icons.comment_outlined,onTap: controller.goCommentPage),
               buildListTile("Post List", Icons.list_outlined,onTap: controller.goStatusPage),
               buildTitle("Others"),

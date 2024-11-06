@@ -9,4 +9,5 @@ class RoutesNames {
   static const String setting = "/setting";
   static const String statusPage="/statusPage";
   static const String commentPage="/commentPage";
+  static const String usersPage="/userPage";
 }

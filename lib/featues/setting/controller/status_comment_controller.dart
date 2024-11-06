@@ -35,6 +35,7 @@ class StatusCommentController extends GetxController{
       await Future.delayed(const Duration(milliseconds: 30));
       isLoad.value=false;
     }
+    update();
   }
 
   @override
